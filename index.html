@@ -215,6 +215,50 @@
       flex-shrink: 0;
       text-shadow: 0 0 20px var(--accent-glow);
     }
+    .stack-arrows-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .stream-arc {
+      position: relative;
+      width: 350px;
+      height: 400px;
+      cursor: ns-resize;
+      perspective: 800px;
+    }
+    .stream-arc-item {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      padding: 1rem 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-card);
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
+    }
+    .stream-arc-item h3 {
+      font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: all 0.4s ease;
+    }
+    .stream-arc-item.active {
+      border-color: rgba(224, 74, 47, 0.5);
+      box-shadow: 0 0 35px var(--accent-glow), 0 0 15px rgba(224, 74, 47, 0.1);
+      background: rgba(224, 74, 47, 0.08);
+      z-index: 10;
+    }
+    .stream-arc-item.active h3 {
+      color: var(--text);
+      font-weight: 700;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+    }
 
     /* ═══════════════════════════════════════
        6: VIDEO
@@ -585,7 +629,7 @@
           <h2>Traditional Media</h2>
           <div class="trait"><span class="lbl">Trust</span><span class="val-high">High</span></div>
           <div class="trait"><span class="lbl">Content</span><span class="val-low">Low</span></div>
-          <div class="trait"><span class="lbl">Channels</span><span class="val-multi">Multi</span></div>
+          <div class="trait"><span class="lbl">Channels</span><span class="val-single">Few</span></div>
         </div>
         <div class="compare-col">
           <h2>Social Media</h2>
@@ -599,7 +643,6 @@
     <!-- 3: The Question -->
     <div class="slide slide-question" data-slide="2">
       <div class="question">How do we build trustworthy and infinitely scalable information channels?</div>
-      <div class="answer">REAL-TIME CONTENT GENERATION</div>
     </div>
 
     <!-- 4: Generative Media -->
@@ -620,11 +663,32 @@
         <div class="stack-col">
           <div class="stack-box"><h3>API</h3></div>
           <div class="stack-box"><h3>Avatar / Narration</h3></div>
+          <div class="stack-box"><h3>Market / Predictions</h3></div>
         </div>
-        <div class="stack-arrow">&#8594;</div>
+        <div class="stack-arrows-col">
+          <div class="stack-arrow">&#8594;</div>
+          <div class="stack-arrow">&#8594;</div>
+          <div class="stack-arrow">&#8594;</div>
+        </div>
         <div class="stack-box"><h3>Synthesis</h3></div>
         <div class="stack-arrow">&#8594;</div>
-        <div class="stack-box"><h3>Live Stream</h3></div>
+        <div class="stream-arc" id="streamArc">
+          <div class="stream-arc-item"><h3>Autonomous War Correspondent</h3></div>
+          <div class="stream-arc-item"><h3>Synthetic Intelligence Debate</h3></div>
+          <div class="stream-arc-item"><h3>Zero-Knowledge Proof Visualizer</h3></div>
+          <div class="stream-arc-item"><h3>Neural Swarm Strategy</h3></div>
+          <div class="stream-arc-item"><h3>Adversarial Sandbox</h3></div>
+          <div class="stream-arc-item"><h3>Real-time Geopolitical Sim</h3></div>
+          <div class="stream-arc-item active"><h3>AI vs AI Factorio</h3></div>
+          <div class="stream-arc-item"><h3>Multi-Agent Supply Chain</h3></div>
+          <div class="stream-arc-item"><h3>Recursive World Builder</h3></div>
+          <div class="stream-arc-item"><h3>Emergent Civilization</h3></div>
+          <div class="stream-arc-item"><h3>Consensus Oracle Feed</h3></div>
+          <div class="stream-arc-item"><h3>Generative Film Studio</h3></div>
+          <div class="stream-arc-item"><h3>Infinite Documentary</h3></div>
+          <div class="stream-arc-item"><h3>Autonomous News Network</h3></div>
+          <div class="stream-arc-item"><h3>Perpetual Wargame</h3></div>
+        </div>
       </div>
     </div>
 
@@ -758,6 +822,23 @@
 
   </div>
 
+  <!-- Avatar Pet Mode (2x size, cropped to top 1/3) -->
+  <iframe id="avatar-pet"
+    src="avatar-pet.html"
+    style="
+      position: fixed;
+      bottom: 0;
+      right: -250px;
+      width: 950px;
+      height: 100vh;
+      border: none;
+      background: transparent;
+      z-index: 200;
+      pointer-events: auto;
+    "
+    allow="autoplay"
+  ></iframe>
+
   <div class="slide-counter"><span id="current">1</span> / <span id="total">14</span></div>
   <div class="nav">
     <button id="prev">&#8249;</button>
@@ -805,6 +886,55 @@
     });
 
     goTo(0);
+
+    // Stream halfmoon arc — infinite loop
+    const arc = document.getElementById('streamArc');
+    const arcItems = Array.from(arc.querySelectorAll('.stream-arc-item'));
+    const arcLen = arcItems.length;
+    let arcActive = 6; // "AI vs AI Factorio" starts active
+    const arcRadius = 320;
+    const arcCenter = 200;
+    const visibleRange = 6;
+
+    function mod(n, m) { return ((n % m) + m) % m; }
+
+    function layoutArc() {
+      arcItems.forEach((el, i) => {
+        // Shortest distance on the ring
+        let offset = i - mod(arcActive, arcLen);
+        if (offset > arcLen / 2) offset -= arcLen;
+        if (offset < -arcLen / 2) offset += arcLen;
+        const absOff = Math.abs(offset);
+
+        if (absOff > visibleRange) {
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+          return;
+        }
+
+        const angle = offset * 12 * (Math.PI / 180);
+        const y = arcCenter + Math.sin(angle) * arcRadius - 22;
+        const x = (1 - Math.cos(angle)) * arcRadius * 0.35;
+        const scale = 1 - absOff * 0.08;
+        const opacity = absOff === 0 ? 1 : Math.max(0.15, 1 - absOff * 0.18);
+
+        el.style.transform = `translateX(${x}px) scale(${scale})`;
+        el.style.top = `${y}px`;
+        el.style.opacity = opacity;
+        el.style.pointerEvents = absOff === 0 ? 'auto' : 'none';
+        el.classList.toggle('active', absOff === 0);
+      });
+    }
+
+    arc.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.deltaY > 0) arcActive++;
+      else arcActive--;
+      layoutArc();
+    }, { passive: false });
+
+    layoutArc();
   </script>
 </body>
 </html>
