@@ -50,24 +50,89 @@ async function loadModel() {
     model.motion('Idle', 0, PIXI.live2d.MotionPriority.IDLE);
   } catch (e) {}
 
-  // Mouse tracking
-  document.addEventListener('mousemove', (e) => {
-    model.focus(e.clientX, e.clientY);
-  });
 
-  // Click to trigger random motion
-  model.on('pointerdown', () => {
-    const motionIndex = Math.floor(Math.random() * 6);
-    model.motion('', motionIndex, PIXI.live2d.MotionPriority.NORMAL);
-  });
-  model.interactive = true;
-  model.cursor = 'pointer';
 
   // Random expression cycling
   setInterval(() => {
     const exp = Math.floor(Math.random() * 8);
     try { model.expression(exp); } catch (e) {}
   }, 8000);
+
+  // --- Narration + lip sync (all in iframe) ---
+  let currentSource = null;
+  let audioCtx = null;
+  let analyser = null;
+  let dataArray = null;
+  let rawMouth = 0;
+  let smoothMouth = 0;
+  const SMOOTH_UP = 0.6;    // fast open
+  const SMOOTH_DOWN = 0.15;  // gentle close
+
+  // Sample audio + smooth + apply lip sync all in one ticker
+  app.ticker.add(() => {
+    if (analyser && currentSource) {
+      analyser.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < 20; i++) sum += dataArray[i];
+      rawMouth = Math.min(1, (sum / 20) / 100);
+    }
+    const factor = rawMouth > smoothMouth ? SMOOTH_UP : SMOOTH_DOWN;
+    smoothMouth += (rawMouth - smoothMouth) * factor;
+    if (smoothMouth < 0.01) smoothMouth = 0;
+
+    // Force lip sync param - set it directly on the core model arrays
+    // so the model's own update can't override it
+    const cm = model.internalModel.coreModel;
+    const ids = cm._model.parameters.ids;
+    const idx = ids.indexOf('ParamA');
+    if (idx >= 0) {
+      cm._model.parameters.values[idx] = smoothMouth;
+    }
+  });
+
+  function stopAudio() {
+    if (currentSource) {
+      try { currentSource.stop(); } catch (e) {}
+      currentSource = null;
+    }
+    rawMouth = 0;
+  }
+
+  function playAudio(url) {
+    stopAudio();
+
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.8;
+      analyser.connect(audioCtx.destination);
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    fetch(url)
+      .then(r => r.arrayBuffer())
+      .then(buf => audioCtx.decodeAudioData(buf))
+      .then(audioBuffer => {
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(analyser);
+        source.start(0);
+        currentSource = source;
+        source.onended = () => {
+          if (currentSource === source) { currentSource = null; rawMouth = 0; }
+        };
+      })
+      .catch(err => console.error('Narration error:', err));
+  }
+
+  window.addEventListener('message', (e) => {
+    if (!e.data) return;
+    console.log('[avatar] message:', e.data.type, e.data.url || '');
+    if (e.data.type === 'speak') playAudio(e.data.url);
+    if (e.data.type === 'stop') stopAudio();
+  });
 }
 
 loadModel().catch(err => {

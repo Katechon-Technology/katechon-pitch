@@ -568,11 +568,11 @@
     ═══════════════════════════════════════ */
     .nav {
       position: fixed;
-      bottom: 2.5rem;
+      top: 2rem;
       right: 2.5rem;
       display: flex;
       gap: 0.5rem;
-      z-index: 100;
+      z-index: 300;
     }
     .nav button {
       background: rgba(255,255,255,0.06);
@@ -592,6 +592,7 @@
       background: rgba(255,255,255,0.12);
       border-color: rgba(255,255,255,0.2);
     }
+    .nav-left { right: auto; left: 2.5rem; }
 
     .progress {
       position: fixed;
@@ -834,7 +835,7 @@
       border: none;
       background: transparent;
       z-index: 200;
-      pointer-events: auto;
+      pointer-events: none;
     "
     allow="autoplay"
   ></iframe>
@@ -844,6 +845,10 @@
     <button id="prev">&#8249;</button>
     <button id="next">&#8250;</button>
   </div>
+  <div class="nav nav-left">
+    <button id="avatar-toggle" title="Toggle avatar">&#9787;</button>
+    <button id="sound-toggle" title="Toggle narration">&#9834;</button>
+  </div>
   <div class="progress" id="progress"></div>
 
   <script>
@@ -851,8 +856,39 @@
     const total = slides.length;
     let current = 0;
 
+    // --- Background music (loops forever) ---
+    const bgMusic = new Audio('assets/Cloud_Sync_2026-03-09T120527.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+
+    // Audio requires user interaction to start
+    let bgStarted = false;
+    function ensureBgMusic() {
+      if (!bgStarted) { bgStarted = true; bgMusic.play().catch(() => {}); }
+    }
+
+    // --- Narration system ---
+    // All audio playback + lip sync happens inside the iframe
+    function stopNarration() {
+      const pet = document.getElementById('avatar-pet');
+      if (pet && pet.contentWindow) {
+        pet.contentWindow.postMessage({ type: 'stop' }, '*');
+      }
+    }
+
+    function playNarration(slideIndex) {
+      const pet = document.getElementById('avatar-pet');
+      console.log('[deck] playNarration', slideIndex, 'iframe:', !!pet, 'contentWindow:', !!(pet && pet.contentWindow));
+      if (pet && pet.contentWindow) {
+        const url = new URL(`assets/narration/slide-${slideIndex}.mp3`, window.location.href).href;
+        console.log('[deck] posting speak:', url);
+        pet.contentWindow.postMessage({ type: 'speak', url }, '*');
+      }
+    }
+
     function goTo(n) {
       if (n < 0 || n >= total) return;
+      stopNarration();
       slides[current].classList.remove('active');
       const vid = slides[current].querySelector('video');
       if (vid) vid.pause();
@@ -860,7 +896,31 @@
       slides[current].classList.add('active');
       document.getElementById('current').textContent = current + 1;
       document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+      ensureBgMusic();
+      if (avatarVisible && narrationEnabled) playNarration(n);
     }
+
+    // Separate avatar and sound toggles
+    let avatarVisible = true;
+    let narrationEnabled = true;
+    const avatarToggleBtn = document.getElementById('avatar-toggle');
+    const soundToggleBtn = document.getElementById('sound-toggle');
+    const avatarIframe = document.getElementById('avatar-pet');
+
+    avatarToggleBtn.addEventListener('click', () => {
+      avatarVisible = !avatarVisible;
+      avatarIframe.style.display = avatarVisible ? '' : 'none';
+      avatarToggleBtn.style.opacity = avatarVisible ? '1' : '0.4';
+      if (!avatarVisible) stopNarration();
+      else if (narrationEnabled) playNarration(current);
+    });
+
+    soundToggleBtn.addEventListener('click', () => {
+      narrationEnabled = !narrationEnabled;
+      soundToggleBtn.style.opacity = narrationEnabled ? '1' : '0.4';
+      if (!narrationEnabled) stopNarration();
+      else if (avatarVisible) playNarration(current);
+    });
 
     document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
     document.getElementById('next').addEventListener('click', () => goTo(current + 1));
@@ -885,7 +945,10 @@
       if (Math.abs(dx) > 50) dx > 0 ? goTo(current - 1) : goTo(current + 1);
     });
 
-    goTo(0);
+    // Initial slide (no narration yet — needs user interaction)
+    slides[0].classList.add('active');
+    document.getElementById('current').textContent = '1';
+    document.getElementById('progress').style.width = (1 / total * 100) + '%';
 
     // Stream halfmoon arc — infinite loop
     const arc = document.getElementById('streamArc');
