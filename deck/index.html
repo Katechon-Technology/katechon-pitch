@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katechon Technology</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #111111;
+      --bg-card: #191919;
+      --accent: #e04a2f;
+      --accent-glow: rgba(224, 74, 47, 0.15);
+      --accent-soft: rgba(224, 74, 47, 0.08);
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --text-dim: #555555;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+    }
+
+    .deck { width: 100vw; height: 100vh; position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 5vh 6vw;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      background: var(--bg);
+    }
+    .slide.active { opacity: 1; pointer-events: auto; }
+
+    .label {
+      font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+      color: var(--accent);
+      letter-spacing: 0.35em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* ═══════════════════════════════════════
+       1: TITLE
+    ═══════════════════════════════════════ */
+    .slide-title {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 60%, var(--accent-soft) 0%, var(--bg) 70%);
+    }
+    .slide-title h1 {
+      font-size: clamp(4rem, 9vw, 8rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1.05;
+    }
+    .slide-title .subtitle {
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+      letter-spacing: 0.25em;
+      font-weight: 300;
+    }
+
+    /* ═══════════════════════════════════════
+       2: COMPARISON
+    ═══════════════════════════════════════ */
+    .slide-compare { align-items: center; }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      width: 85%;
+      max-width: 1200px;
+    }
+    .compare-col {
+      padding: 3.5rem 3rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .compare-col h2 {
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 2.5rem;
+    }
+    .compare-col .trait {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+    }
+    .compare-col .trait:last-child { border-bottom: none; }
+    .compare-col .trait .lbl { color: var(--text-muted); }
+    .val-high {
+      color: #4ade80; font-weight: 700;
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    }
+    .val-low {
+      color: var(--accent); font-weight: 700;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+    .val-multi { color: #60a5fa; font-weight: 700; text-shadow: 0 0 20px rgba(96, 165, 250, 0.3); }
+    .val-single { color: var(--text-dim); font-weight: 700; }
+
+    /* ═══════════════════════════════════════
+       3: QUESTION
+    ═══════════════════════════════════════ */
+    .slide-question {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 40%, var(--accent-soft) 0%, var(--bg) 65%);
+    }
+    .slide-question .question {
+      font-size: clamp(2rem, 4.5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.35;
+      max-width: 85%;
+    }
+    .slide-question .answer {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: var(--accent);
+      margin-top: 4rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      padding: 1rem 2.5rem;
+      border: 1px solid rgba(224, 74, 47, 0.3);
+      border-radius: 8px;
+      background: var(--accent-soft);
+    }
+
+    /* ═══════════════════════════════════════
+       4: GENERATIVE MEDIA
+    ═══════════════════════════════════════ */
+    .slide-genmedia { text-align: center; }
+    .slide-genmedia .label { margin-bottom: 2rem; }
+    .slide-genmedia h2 {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      margin-bottom: 4rem;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .genmedia-traits {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trait-pill {
+      padding: 1.2rem 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      color: var(--text-muted);
+      background: var(--bg-card);
+    }
+    .trait-pill strong { color: var(--text); font-weight: 700; }
+
+    /* ═══════════════════════════════════════
+       5: STACK FLOW
+    ═══════════════════════════════════════ */
+    .slide-stack { align-items: center; }
+    .slide-stack .label { margin-bottom: 4rem; }
+    .stack-flow {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      width: 85%;
+      max-width: 1100px;
+      justify-content: center;
+    }
+    .stack-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .stack-box {
+      padding: 2.5rem 3rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg-card);
+      min-width: 220px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .stack-box:hover {
+      border-color: rgba(224, 74, 47, 0.4);
+      box-shadow: 0 0 30px var(--accent-soft);
+    }
+    .stack-box h3 {
+      font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+    }
+    .stack-arrow {
+      font-size: 2.5rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      text-shadow: 0 0 20px var(--accent-glow);
+    }
+    .stack-arrows-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .stream-arc {
+      position: relative;
+      width: 350px;
+      height: 400px;
+      cursor: ns-resize;
+      perspective: 800px;
+    }
+    .stream-arc-item {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      padding: 1rem 1.8rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-card);
+      text-align: center;
+      white-space: nowrap;
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
+    }
+    .stream-arc-item h3 {
+      font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+      font-weight: 500;
+      color: var(--text-dim);
+      transition: all 0.4s ease;
+    }
+    .stream-arc-item.active {
+      border-color: rgba(224, 74, 47, 0.5);
+      box-shadow: 0 0 35px var(--accent-glow), 0 0 15px rgba(224, 74, 47, 0.1);
+      background: rgba(224, 74, 47, 0.08);
+      z-index: 10;
+    }
+    .stream-arc-item.active h3 {
+      color: var(--text);
+      font-weight: 700;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+    }
+
+    /* ═══════════════════════════════════════
+       6: VIDEO
+    ═══════════════════════════════════════ */
+    .slide-video {
+      justify-content: center;
+      align-items: center;
+      padding: 3vh 4vw;
+      background: #0a0a0a;
+    }
+    .slide-video .label { margin-bottom: 2.5rem; }
+    .slide-video video {
+      max-width: 90%;
+      max-height: 75vh;
+      border-radius: 12px;
+      box-shadow: 0 12px 60px rgba(0, 0, 0, 0.8), 0 0 40px var(--accent-soft);
+      border: 1px solid var(--border);
+    }
+
+    /* ═══════════════════════════════════════
+       7: VISION STATEMENT
+    ═══════════════════════════════════════ */
+    .slide-vision {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 50%, var(--accent-soft) 0%, var(--bg) 60%);
+    }
+    .slide-vision .statement {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.45;
+      max-width: 80%;
+    }
+    .slide-vision .statement em {
+      font-style: normal;
+      color: var(--accent);
+      text-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    /* ═══════════════════════════════════════
+       8: BROWSER ERA
+    ═══════════════════════════════════════ */
+    .slide-era { text-align: left; align-items: flex-start; padding: 8vh 10vw; }
+    .slide-era .eras {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    .era-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .era-marker {
+      width: 4px;
+      height: 100%;
+      min-height: 3rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .era-past .era-marker { background: var(--text-dim); }
+    .era-now .era-marker { background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+    .era-row .era-label {
+      font-size: clamp(0.7rem, 1vw, 0.8rem);
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      width: 5rem;
+      flex-shrink: 0;
+    }
+    .era-now .era-label { color: var(--accent); }
+    .era-row .era-text {
+      font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .era-now .era-text {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .era-now .era-text .highlight {
+      color: var(--accent);
+    }
+
+    /* ═══════════════════════════════════════
+       9: EVOLUTION
+    ═══════════════════════════════════════ */
+    .slide-evolution { text-align: center; }
+    .slide-evolution .starts {
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      color: var(--text-dim);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+    .slide-evolution .simple-q {
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 5rem;
+      max-width: 75%;
+      line-height: 1.4;
+    }
+    .slide-evolution .divider {
+      width: 60px;
+      height: 2px;
+      background: var(--accent);
+      margin: 0 auto 5rem;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    .slide-evolution .becomes {
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      color: var(--text-dim);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+    .slide-evolution .big-claim {
+      font-size: clamp(2rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      max-width: 80%;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--accent) 0%, #ff8a65 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ═══════════════════════════════════════
+       10: MEDIA PHOTO
+    ═══════════════════════════════════════ */
+    .slide-media { justify-content: center; align-items: center; background: #0e0e0e; }
+    .slide-media img {
+      max-width: 85%;
+      max-height: 75vh;
+      border-radius: 16px;
+      box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ═══════════════════════════════════════
+       11: MONETIZATION
+    ═══════════════════════════════════════ */
+    .slide-monetization { align-items: center; }
+    .slide-monetization .label { margin-bottom: 4rem; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+      width: 90%;
+      max-width: 1200px;
+    }
+    .grid-3 .card {
+      padding: 3rem 2.5rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      border-top: 3px solid var(--accent);
+    }
+    .grid-3 h3 {
+      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .grid-3 p {
+      font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════
+       12: WHERE WE ARE
+    ═══════════════════════════════════════ */
+    .slide-status { align-items: center; }
+    .slide-status .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      width: 85%;
+      max-width: 1100px;
+    }
+    .slide-status .section {
+      padding: 2.5rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .slide-status .label { margin-bottom: 2rem; }
+    .slide-status .milestone {
+      font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+      color: var(--text);
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .slide-status .milestone span {
+      color: var(--accent);
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .slide-status .ask-text {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    /* ═══════════════════════════════════════
+       13: FOUNDER
+    ═══════════════════════════════════════ */
+    .slide-founder { align-items: center; text-align: center; }
+    .slide-founder .founder-header {
+      margin-bottom: 4rem;
+    }
+    .slide-founder .founder-name {
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .slide-founder .founder-role {
+      font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+      color: var(--accent);
+      letter-spacing: 0.3em;
+      font-weight: 600;
+    }
+    .founder-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+      width: 92%;
+      max-width: 1300px;
+    }
+    .founder-card {
+      padding: 2.5rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      text-align: left;
+      border-top: 3px solid var(--accent);
+    }
+    .founder-card .card-label {
+      font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .founder-card p {
+      font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .founder-card p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════
+       13: CLOSING
+    ═══════════════════════════════════════ */
+    .slide-closing {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 60%, var(--accent-soft) 0%, var(--bg) 70%);
+    }
+    .slide-closing h1 {
+      font-size: clamp(4rem, 9vw, 8rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1.05;
+    }
+    .slide-closing .cta {
+      font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+      color: var(--text-muted);
+      margin-top: 2.5rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+    }
+    .slide-closing .qr-row {
+      display: flex;
+      gap: 4rem;
+      margin-top: 3.5rem;
+      align-items: center;
+    }
+    .qr-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .qr-item img {
+      width: clamp(140px, 14vw, 200px);
+      height: clamp(140px, 14vw, 200px);
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .qr-item .qr-label {
+      font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      font-weight: 500;
+    }
+
+    /* ═══════════════════════════════════════
+       NAVIGATION
+    ═══════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 2rem;
+      right: 2.5rem;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 300;
+    }
+    .nav button {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav button:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .nav-left { right: auto; left: 2.5rem; }
+
+    .progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #ff8a65);
+      transition: width 0.4s ease;
+    }
+
+    .slide-counter {
+      position: fixed;
+      bottom: 2.7rem;
+      left: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <!-- Password Gate -->
+  <div id="password-gate" style="
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    gap: 1.5rem;
+  ">
+    <div style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: var(--accent); letter-spacing: 0.35em; font-weight: 600; text-transform: uppercase;">KATECHON TECHNOLOGY</div>
+    <div style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); font-weight: 300;">Enter password to view deck</div>
+    <form id="password-form" style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+      <input id="password-input" type="password" autocomplete="off" placeholder="Password" style="
+        padding: 0.9rem 1.5rem;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 1rem;
+        outline: none;
+        width: 220px;
+      ">
+      <button type="submit" style="
+        padding: 0.9rem 2rem;
+        background: var(--accent-soft);
+        border: 1px solid rgba(224, 74, 47, 0.4);
+        border-radius: 8px;
+        color: var(--accent);
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      ">Enter</button>
+    </form>
+    <div id="password-error" style="color: var(--accent); font-size: 0.9rem; opacity: 0;">Incorrect password</div>
+  </div>
+
+  <div class="deck" style="display: none;" id="deck-content">
+
+    <!-- 1: Title -->
+    <div class="slide slide-title active" data-slide="0">
+      <h1>KATECHON<br>TECHNOLOGY</h1>
+      <div class="subtitle">REAL-TIME CONTENT GENERATION</div>
+    </div>
+
+    <!-- 2: Traditional vs Social Media -->
+    <div class="slide slide-compare" data-slide="1">
+      <div class="compare-grid">
+        <div class="compare-col">
+          <h2>Traditional Media</h2>
+          <div class="trait"><span class="lbl">Trust</span><span class="val-high">High</span></div>
+          <div class="trait"><span class="lbl">Content</span><span class="val-low">Low</span></div>
+          <div class="trait"><span class="lbl">Channels</span><span class="val-single">Few</span></div>
+        </div>
+        <div class="compare-col">
+          <h2>Social Media</h2>
+          <div class="trait"><span class="lbl">Trust</span><span class="val-low">Low</span></div>
+          <div class="trait"><span class="lbl">Content</span><span class="val-high">High</span></div>
+          <div class="trait"><span class="lbl">Channels</span><span class="val-single">Single</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: The Question -->
+    <div class="slide slide-question" data-slide="2">
+      <div class="question">How do we build trustworthy and infinitely scalable information channels?</div>
+    </div>
+
+    <!-- 4: Generative Media -->
+    <div class="slide slide-genmedia" data-slide="3">
+      <div class="label">THE ANSWER</div>
+      <h2>Generative Media</h2>
+      <div class="genmedia-traits">
+        <div class="trait-pill"><strong>Variable</strong> Trust</div>
+        <div class="trait-pill"><strong>High</strong> Content</div>
+        <div class="trait-pill"><strong>Multi</strong> Channel</div>
+      </div>
+    </div>
+
+    <!-- 5: The Stack -->
+    <div class="slide slide-stack" data-slide="4">
+      <div class="label">THE STACK</div>
+      <div class="stack-flow">
+        <div class="stack-col">
+          <div class="stack-box"><h3>API</h3></div>
+          <div class="stack-box"><h3>Avatar / Narration</h3></div>
+          <div class="stack-box"><h3>Market / Predictions</h3></div>
+        </div>
+        <div class="stack-arrows-col">
+          <div class="stack-arrow">&#8594;</div>
+          <div class="stack-arrow">&#8594;</div>
+          <div class="stack-arrow">&#8594;</div>
+        </div>
+        <div class="stack-box"><h3>Synthesis</h3></div>
+        <div class="stack-arrow">&#8594;</div>
+        <div class="stream-arc" id="streamArc">
+          <div class="stream-arc-item"><h3>Autonomous War Correspondent</h3></div>
+          <div class="stream-arc-item"><h3>Synthetic Intelligence Debate</h3></div>
+          <div class="stream-arc-item"><h3>Zero-Knowledge Proof Visualizer</h3></div>
+          <div class="stream-arc-item"><h3>Neural Swarm Strategy</h3></div>
+          <div class="stream-arc-item"><h3>Adversarial Sandbox</h3></div>
+          <div class="stream-arc-item"><h3>Real-time Geopolitical Sim</h3></div>
+          <div class="stream-arc-item active"><h3>AI vs AI Factorio</h3></div>
+          <div class="stream-arc-item"><h3>Multi-Agent Supply Chain</h3></div>
+          <div class="stream-arc-item"><h3>Recursive World Builder</h3></div>
+          <div class="stream-arc-item"><h3>Emergent Civilization</h3></div>
+          <div class="stream-arc-item"><h3>Consensus Oracle Feed</h3></div>
+          <div class="stream-arc-item"><h3>Generative Film Studio</h3></div>
+          <div class="stream-arc-item"><h3>Infinite Documentary</h3></div>
+          <div class="stream-arc-item"><h3>Autonomous News Network</h3></div>
+          <div class="stream-arc-item"><h3>Perpetual Wargame</h3></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Video Demo -->
+    <div class="slide slide-video" data-slide="5">
+      <div class="label">DEMO</div>
+      <video controls preload="metadata">
+        <source src="../assets/demo.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- 7: Vision Statement -->
+    <div class="slide slide-vision" data-slide="6">
+      <div class="statement">We are building a platform for <em>infinite</em>, customizable, and <em>trusted</em> content generation</div>
+    </div>
+
+    <!-- 8: Browser Era -->
+    <div class="slide slide-era" data-slide="7">
+      <div class="eras">
+        <div class="era-row era-past">
+          <div class="era-label">Then</div>
+          <div class="era-marker"></div>
+          <div class="era-text">Everything was built around the <strong>HTML page</strong> and text</div>
+        </div>
+        <div class="era-row era-past">
+          <div class="era-label">Now</div>
+          <div class="era-marker"></div>
+          <div class="era-text">Everything was built around the <strong>video and photo</strong> file</div>
+        </div>
+        <div class="era-row era-now">
+          <div class="era-label">Next</div>
+          <div class="era-marker"></div>
+          <div class="era-text">Everything will be built around the <span class="highlight">browser itself</span> — streamed as an overlay</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9: Evolution -->
+    <div class="slide slide-evolution" data-slide="8">
+      <div class="starts">What starts as a simple question</div>
+      <div class="simple-q">"How can we live stream an AI playing video games?"</div>
+      <div class="divider"></div>
+      <div class="becomes">Becomes</div>
+      <div class="big-claim">The next evolution of media on the internet</div>
+    </div>
+
+    <!-- 10: Media Definition -->
+    <div class="slide slide-media" data-slide="9">
+      <img src="../assets/media-definition.png" alt="Media definition">
+    </div>
+
+    <!-- 11: Monetization -->
+    <div class="slide slide-monetization" data-slide="10">
+      <div class="label">MONETIZATION</div>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Betting Fees</h3>
+          <p>Revenue from prediction markets on model performance</p>
+        </div>
+        <div class="card">
+          <h3>API Access</h3>
+          <p>AI labs pay for benchmarking infrastructure and data</p>
+        </div>
+        <div class="card">
+          <h3>Content Licensing</h3>
+          <p>Livestream content and training data monetization</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12: Where We Are / The Ask -->
+    <div class="slide slide-status" data-slide="11">
+      <div class="split">
+        <div class="section">
+          <div class="label">WHERE WE ARE</div>
+          <div class="milestone"><span>&#8594;</span> First prototype (Claudetorio) live</div>
+          <div class="milestone"><span>&#8594;</span> Platform in active development</div>
+          <div class="milestone"><span>&#8594;</span> Meeting investors, AI researchers, and labs in London</div>
+        </div>
+        <div class="section">
+          <div class="label">THE ASK</div>
+          <div class="ask-text">Raising a <strong style="color: var(--text); font-weight: 800;">seed round</strong> to scale from prototype to full platform launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13: Founder -->
+    <div class="slide slide-founder" data-slide="12">
+      <div class="founder-header">
+        <div class="founder-name">Simon Judd</div>
+        <div class="founder-role">FOUNDER</div>
+      </div>
+      <div class="founder-grid">
+        <div class="founder-card">
+          <div class="card-label">TECHNOLOGY</div>
+          <p>
+            &#8226; Engineer at <strong>Ingonyama</strong>, leading cryptography company focused on GPU hardware acceleration<br><br>
+            &#8226; <strong>ZK Hack</strong> winner<br><br>
+            &#8226; Independent research in interactive proof systems at <strong>EPFL</strong>, Switzerland
+          </p>
+        </div>
+        <div class="founder-card">
+          <div class="card-label">BUSINESS</div>
+          <p>
+            &#8226; Raised <strong>$10M from S-tier investors</strong> while still in business school<br><br>
+            &#8226; Helped grow <strong>Index Coop</strong> from $5M to <strong>$500M AUM</strong>
+          </p>
+        </div>
+        <div class="founder-card">
+          <div class="card-label">LEADERSHIP</div>
+          <p>Former <strong>Infantry Officer</strong>, United States Marine Corps. Leadership forged under pressure.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14: Closing -->
+    <div class="slide slide-closing" data-slide="13">
+      <h1>KATECHON<br>TECHNOLOGY</h1>
+      <div class="cta">Let's talk.</div>
+      <div class="qr-row">
+        <div class="qr-item">
+          <img src="../assets/qr-whatsapp.png" alt="WhatsApp QR">
+          <div class="qr-label">WHATSAPP</div>
+        </div>
+        <div class="qr-item">
+          <img src="../assets/qr-telegram.png" alt="Telegram QR">
+          <div class="qr-label">TELEGRAM</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Avatar Pet Mode (2x size, cropped to top 1/3) -->
+  <iframe id="avatar-pet"
+    src="../avatar-pet.html"
+    style="
+      position: fixed;
+      bottom: 0;
+      right: -250px;
+      width: 950px;
+      height: 100vh;
+      border: none;
+      background: transparent;
+      z-index: 200;
+      pointer-events: none;
+    "
+    allow="autoplay"
+  ></iframe>
+
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">14</span></div>
+  <div class="nav">
+    <button id="prev">&#8249;</button>
+    <button id="next">&#8250;</button>
+  </div>
+  <div class="nav nav-left">
+    <button id="avatar-toggle" title="Toggle avatar">&#9787;</button>
+    <button id="sound-toggle" title="Toggle narration">&#9834;</button>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <script>
+    // --- Password gate ---
+    const PASS = 'HomeDAO';
+    const gate = document.getElementById('password-gate');
+    const deckContent = document.getElementById('deck-content');
+
+    if (sessionStorage.getItem('katechon-auth') === 'true') {
+      gate.style.display = 'none';
+      deckContent.style.display = '';
+    } else {
+      document.getElementById('password-input').focus();
+    }
+
+    document.getElementById('password-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = document.getElementById('password-input').value;
+      if (val === PASS) {
+        sessionStorage.setItem('katechon-auth', 'true');
+        gate.style.display = 'none';
+        deckContent.style.display = '';
+      } else {
+        document.getElementById('password-error').style.opacity = '1';
+        document.getElementById('password-input').value = '';
+        document.getElementById('password-input').focus();
+      }
+    });
+
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    let current = 0;
+
+    // --- Background music (loops forever) ---
+    const bgMusic = new Audio('../assets/Cloud_Sync_2026-03-09T120527.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+
+    // Audio requires user interaction to start
+    let bgStarted = false;
+    function ensureBgMusic() {
+      if (!bgStarted) { bgStarted = true; bgMusic.play().catch(() => {}); }
+    }
+
+    // --- Narration system ---
+    // All audio playback + lip sync happens inside the iframe
+    function stopNarration() {
+      const pet = document.getElementById('avatar-pet');
+      if (pet && pet.contentWindow) {
+        pet.contentWindow.postMessage({ type: 'stop' }, '*');
+      }
+    }
+
+    function playNarration(slideIndex) {
+      const pet = document.getElementById('avatar-pet');
+      console.log('[deck] playNarration', slideIndex, 'iframe:', !!pet, 'contentWindow:', !!(pet && pet.contentWindow));
+      if (pet && pet.contentWindow) {
+        const url = new URL(`../assets/narration/slide-${slideIndex}.mp3`, window.location.href).href;
+        console.log('[deck] posting speak:', url);
+        pet.contentWindow.postMessage({ type: 'speak', url }, '*');
+      }
+    }
+
+    function goTo(n) {
+      if (n < 0 || n >= total) return;
+      stopNarration();
+      slides[current].classList.remove('active');
+      const vid = slides[current].querySelector('video');
+      if (vid) vid.pause();
+      current = n;
+      slides[current].classList.add('active');
+      document.getElementById('current').textContent = current + 1;
+      document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+      ensureBgMusic();
+      if (avatarVisible && narrationEnabled) playNarration(n);
+    }
+
+    // Separate avatar and sound toggles
+    let avatarVisible = true;
+    let narrationEnabled = true;
+    const avatarToggleBtn = document.getElementById('avatar-toggle');
+    const soundToggleBtn = document.getElementById('sound-toggle');
+    const avatarIframe = document.getElementById('avatar-pet');
+
+    avatarToggleBtn.addEventListener('click', () => {
+      avatarVisible = !avatarVisible;
+      avatarIframe.style.display = avatarVisible ? '' : 'none';
+      avatarToggleBtn.style.opacity = avatarVisible ? '1' : '0.4';
+      if (!avatarVisible) stopNarration();
+      else if (narrationEnabled) playNarration(current);
+    });
+
+    soundToggleBtn.addEventListener('click', () => {
+      narrationEnabled = !narrationEnabled;
+      soundToggleBtn.style.opacity = narrationEnabled ? '1' : '0.4';
+      if (!narrationEnabled) stopNarration();
+      else if (avatarVisible) playNarration(current);
+    });
+
+    document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('next').addEventListener('click', () => goTo(current + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        goTo(current + 1);
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        goTo(current - 1);
+      }
+      if (e.key === 'Home') goTo(0);
+      if (e.key === 'End') goTo(total - 1);
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) dx > 0 ? goTo(current - 1) : goTo(current + 1);
+    });
+
+    // Initial slide (no narration yet — needs user interaction)
+    slides[0].classList.add('active');
+    document.getElementById('current').textContent = '1';
+    document.getElementById('progress').style.width = (1 / total * 100) + '%';
+
+    // Stream halfmoon arc — infinite loop
+    const arc = document.getElementById('streamArc');
+    const arcItems = Array.from(arc.querySelectorAll('.stream-arc-item'));
+    const arcLen = arcItems.length;
+    let arcActive = 6; // "AI vs AI Factorio" starts active
+    const arcRadius = 320;
+    const arcCenter = 200;
+    const visibleRange = 6;
+
+    function mod(n, m) { return ((n % m) + m) % m; }
+
+    function layoutArc() {
+      arcItems.forEach((el, i) => {
+        // Shortest distance on the ring
+        let offset = i - mod(arcActive, arcLen);
+        if (offset > arcLen / 2) offset -= arcLen;
+        if (offset < -arcLen / 2) offset += arcLen;
+        const absOff = Math.abs(offset);
+
+        if (absOff > visibleRange) {
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+          return;
+        }
+
+        const angle = offset * 12 * (Math.PI / 180);
+        const y = arcCenter + Math.sin(angle) * arcRadius - 22;
+        const x = (1 - Math.cos(angle)) * arcRadius * 0.35;
+        const scale = 1 - absOff * 0.08;
+        const opacity = absOff === 0 ? 1 : Math.max(0.15, 1 - absOff * 0.18);
+
+        el.style.transform = `translateX(${x}px) scale(${scale})`;
+        el.style.top = `${y}px`;
+        el.style.opacity = opacity;
+        el.style.pointerEvents = absOff === 0 ? 'auto' : 'none';
+        el.classList.toggle('active', absOff === 0);
+      });
+    }
+
+    arc.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.deltaY > 0) arcActive++;
+      else arcActive--;
+      layoutArc();
+    }, { passive: false });
+
+    layoutArc();
+  </script>
+</body>
+</html>
