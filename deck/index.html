@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Katechon Technology</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Anton&display=swap');
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -81,13 +81,13 @@
     .slide-compare { align-items: center; }
     .compare-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      width: 85%;
-      max-width: 1200px;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      width: 70%;
+      max-width: 680px;
     }
     .compare-col {
-      padding: 3.5rem 3rem;
+      padding: 2.5rem 2.5rem;
       border-radius: 16px;
       border: 1px solid var(--border);
       background: var(--bg-card);
@@ -432,69 +432,99 @@
     }
 
     /* ═══════════════════════════════════════
-       12: WHERE WE ARE
+       12: THE ASK
     ═══════════════════════════════════════ */
-    .slide-status { align-items: center; }
-    .slide-status .split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-      width: 85%;
-      max-width: 1100px;
+    .slide-ask {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 50%, rgba(224, 74, 47, 0.12) 0%, var(--bg) 55%);
+      overflow: hidden;
     }
-    .slide-status .section {
-      padding: 2.5rem;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-    }
-    .slide-status .label { margin-bottom: 2rem; }
-    .slide-status .milestone {
-      font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+    .slide-ask .ask-hero {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(7rem, 18vw, 16rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
       color: var(--text);
-      margin-bottom: 1.2rem;
-      line-height: 1.5;
+      position: relative;
+      z-index: 1;
+    }
+    .slide-ask .ask-hero .accent {
+      background: linear-gradient(135deg, var(--accent) 0%, #ff8a65 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .slide-ask .ask-tagline {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: rgba(255,255,255,0.7);
+      margin-top: 3.5rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+    }
+    .slide-ask .ask-milestones {
       display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
+      gap: 2.5rem;
+      margin-top: 4rem;
+      justify-content: center;
     }
-    .slide-status .milestone span {
-      color: var(--accent);
-      flex-shrink: 0;
-      font-weight: 700;
+    .slide-ask .ask-milestone {
+      font-size: clamp(0.75rem, 1vw, 0.85rem);
+      color: var(--text-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 500;
     }
-    .slide-status .ask-text {
-      font-size: clamp(1rem, 1.4vw, 1.15rem);
-      color: var(--text-muted);
-      line-height: 1.7;
+    .slide-ask .ask-milestone .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 0.6rem;
+      vertical-align: middle;
+      box-shadow: 0 0 8px var(--accent-glow);
     }
     /* ═══════════════════════════════════════
-       13: FOUNDER
+       13: TEAM
     ═══════════════════════════════════════ */
-    .slide-founder { align-items: center; text-align: center; }
-    .slide-founder .founder-header {
-      margin-bottom: 4rem;
+    .slide-team { align-items: center; padding: 5vh 6vw; }
+
+    /* Founder hero */
+    .founder-hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
     }
-    .slide-founder .founder-name {
+    .founder-hero .founder-name {
       font-size: clamp(2rem, 3.5vw, 3rem);
       font-weight: 900;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
-    .slide-founder .founder-role {
+    .founder-hero .founder-role {
       font-size: clamp(0.8rem, 1.1vw, 0.95rem);
       color: var(--accent);
       letter-spacing: 0.3em;
       font-weight: 600;
     }
+    .founder-hero .founder-subtitle {
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      color: var(--text-dim);
+      margin-top: 0.6rem;
+      letter-spacing: 0.1em;
+      font-weight: 400;
+    }
+
+    /* Founder cards row */
     .founder-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2rem;
-      width: 92%;
-      max-width: 1300px;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 80%;
+      max-width: 900px;
+      margin-bottom: 3rem;
     }
     .founder-card {
-      padding: 2.5rem;
+      padding: 2rem 2rem;
       border-radius: 14px;
       border: 1px solid var(--border);
       background: var(--bg-card);
@@ -502,18 +532,63 @@
       border-top: 3px solid var(--accent);
     }
     .founder-card .card-label {
-      font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+      font-size: clamp(0.65rem, 0.85vw, 0.75rem);
       color: var(--accent);
       letter-spacing: 0.25em;
       font-weight: 600;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
     .founder-card p {
-      font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+      font-size: clamp(0.85rem, 1.1vw, 0.95rem);
       color: var(--text-muted);
-      line-height: 1.75;
+      line-height: 1.7;
     }
     .founder-card p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Team section */
+    .team-section-label {
+      font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+      color: var(--text-dim);
+      letter-spacing: 0.35em;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 80%;
+      max-width: 900px;
+    }
+    .team-card {
+      padding: 1.8rem 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      text-align: left;
+    }
+    .team-card .team-name {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .team-card .team-role {
+      font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .team-card p {
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .team-card p strong {
       color: var(--text);
       font-weight: 600;
     }
@@ -612,47 +687,233 @@
       letter-spacing: 0.15em;
       z-index: 100;
     }
+
+    /* ═══════════════════════════════════════
+       MOBILE
+    ═══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      html, body {
+        overflow: visible;
+        height: auto;
+      }
+
+      .deck {
+        width: 100%;
+        height: auto !important;
+        overflow-y: auto;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+        background: var(--bg);
+      }
+
+      .slide {
+        position: relative;
+        inset: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transition: none;
+        scroll-snap-align: start;
+        padding: 8vh 6vw;
+      }
+
+      /* ── Grids collapse ── */
+      .compare-grid {
+        grid-template-columns: 1fr;
+        width: 95%;
+        gap: 1.5rem;
+      }
+      .compare-col { padding: 2.5rem 2rem; }
+
+      .grid-3 {
+        grid-template-columns: 1fr;
+        width: 95%;
+        gap: 1.5rem;
+      }
+      .grid-3 .card { padding: 2rem 1.5rem; }
+
+      .slide-status .split {
+        grid-template-columns: 1fr;
+        width: 95%;
+        gap: 1.5rem;
+      }
+
+      .founder-grid {
+        grid-template-columns: 1fr;
+        width: 95%;
+        gap: 1.5rem;
+      }
+      .founder-card { padding: 2rem 1.5rem; }
+      .team-grid { width: 95%; }
+      .team-card { padding: 1.5rem; }
+
+      /* ── Stack flow → vertical ── */
+      .stack-flow {
+        flex-direction: column;
+        width: 95%;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      .stack-col {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        width: 100%;
+      }
+      .stack-box { min-width: unset; padding: 1.5rem 1.2rem; flex: 1; }
+      .stack-arrow { transform: rotate(90deg); font-size: 1.8rem; }
+      .stack-arrows-col { flex-direction: row; gap: 0; }
+
+      /* ── Stream arc ── */
+      .stream-arc { width: 260px; height: 280px; }
+
+      /* ── Text containers widen ── */
+      .slide-question .question { max-width: 95%; }
+      .slide-vision .statement { max-width: 95%; }
+      .slide-evolution .simple-q { max-width: 95%; }
+      .slide-evolution .big-claim { max-width: 95%; }
+
+      /* ── Era slide ── */
+      .slide-era { padding: 8vh 5vw 18vh; }
+      .era-row { gap: 1rem; }
+
+      /* ── Video ── */
+      .slide-video video { max-width: 95%; max-height: 55vh; }
+
+      /* ── QR row ── */
+      .qr-row { gap: 2rem; }
+
+      /* ── Hide prev/next — scroll replaces them ── */
+      #prev, #next { display: none; }
+
+      /* ── Nav controls: glass pill at bottom-left ── */
+      .nav-left {
+        left: 1.2rem;
+        right: auto;
+        top: auto;
+        bottom: 1.5rem;
+        bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+        gap: 0.4rem;
+      }
+      .nav-left button {
+        width: 42px;
+        height: 42px;
+        background: rgba(17, 17, 17, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-color: rgba(255,255,255,0.12);
+      }
+
+      /* ── Slide counter: centered glass pill ── */
+      .slide-counter {
+        bottom: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 0.8rem;
+        top: calc(0.8rem + env(safe-area-inset-top, 0px));
+        background: rgba(17, 17, 17, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 0.35rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        z-index: 300;
+        font-size: 0.75rem;
+      }
+
+      /* ── Progress bar stays ── */
+      .progress { z-index: 300; }
+
+      /* ── Avatar: hidden on mobile ── */
+      #avatar-pet { display: none !important; }
+
+      /* ── Hide avatar/sound toggles ── */
+      .nav-left { display: none; }
+
+    }
+
+    /* ═══════════════════════════════════════
+       MOBILE GATE
+    ═══════════════════════════════════════ */
+    .mobile-gate {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .mobile-gate {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: var(--bg);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+      }
+      .mobile-gate .logo {
+        font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+        color: var(--accent);
+        letter-spacing: 0.35em;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 3rem;
+      }
+      .mobile-gate .msg {
+        font-size: clamp(1.4rem, 4vw, 1.8rem);
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.5;
+        max-width: 320px;
+      }
+      .mobile-gate .sub {
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        color: var(--text-muted);
+        margin-top: 1.5rem;
+        font-weight: 300;
+      }
+      .deck, .nav, .nav-left, .slide-counter, .progress, #avatar-pet, #start-overlay {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Password Gate -->
-  <div id="password-gate" style="
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--bg);
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    gap: 1.5rem;
-  ">
-    <div style="font-size: clamp(0.75rem, 1.1vw, 0.9rem); color: var(--accent); letter-spacing: 0.35em; font-weight: 600; text-transform: uppercase;">KATECHON TECHNOLOGY</div>
-    <div style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); font-weight: 300;">Enter password to view deck</div>
-    <form id="password-form" style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-      <input id="password-input" type="password" autocomplete="off" placeholder="Password" style="
-        padding: 0.9rem 1.5rem;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text);
-        font-family: inherit;
-        font-size: 1rem;
-        outline: none;
-        width: 220px;
-      ">
-      <button type="submit" style="
-        padding: 0.9rem 2rem;
-        background: var(--accent-soft);
-        border: 1px solid rgba(224, 74, 47, 0.4);
-        border-radius: 8px;
-        color: var(--accent);
-        font-family: inherit;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-      ">Enter</button>
-    </form>
-    <div id="password-error" style="color: var(--accent); font-size: 0.9rem; opacity: 0;">Incorrect password</div>
+  <!-- Mobile Gate -->
+  <div class="mobile-gate">
+    <div class="logo">KATECHON TECHNOLOGY</div>
+    <div class="msg">Our pitch deck works best on desktop</div>
+    <div class="sub">Please visit on a laptop or desktop browser</div>
   </div>
 
-  <div class="deck" style="display: none;" id="deck-content">
+  <!-- Start Overlay -->
+  <div id="start-overlay" style="
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+  ">
+    <div style="font-size: clamp(1.1rem, 2vw, 1.4rem); color: rgba(255,255,255,0.8); font-weight: 400; letter-spacing: 0.15em;">Press <kbd style="
+      display: inline-block;
+      padding: 0.3em 0.9em;
+      margin: 0 0.25em;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1em;
+      font-weight: 600;
+      color: #fff;
+    ">Space</kbd> to begin</div>
+  </div>
+
+  <div class="deck" id="deck-content">
 
     <!-- 1: Title -->
     <div class="slide slide-title active" data-slide="0">
@@ -770,7 +1031,7 @@
       <div class="simple-q">"How can we live stream an AI playing video games?"</div>
       <div class="divider"></div>
       <div class="becomes">Becomes</div>
-      <div class="big-claim">The next evolution of media on the internet</div>
+      <div class="big-claim">The next evolution of media<br>on the internet</div>
     </div>
 
     <!-- 10: Media Definition -->
@@ -797,47 +1058,53 @@
       </div>
     </div>
 
-    <!-- 12: Where We Are / The Ask -->
-    <div class="slide slide-status" data-slide="11">
-      <div class="split">
-        <div class="section">
-          <div class="label">WHERE WE ARE</div>
-          <div class="milestone"><span>&#8594;</span> First prototype (Claudetorio) live</div>
-          <div class="milestone"><span>&#8594;</span> Platform in active development</div>
-          <div class="milestone"><span>&#8594;</span> Meeting investors, AI researchers, and labs in London, NYC, and SF</div>
-        </div>
-        <div class="section">
-          <div class="label">THE ASK</div>
-          <div class="ask-text">Raising a <strong style="color: var(--text); font-weight: 800;">seed round</strong> to scale from prototype to full platform launch.</div>
-        </div>
+    <!-- 12: The Ask -->
+    <div class="slide slide-ask" data-slide="11">
+      <div class="ask-hero"><span class="accent">Seed</span><br>Round</div>
+      <div class="ask-tagline">The next era of media starts here. Get in.</div>
+      <div class="ask-milestones">
+        <div class="ask-milestone"><span class="dot"></span>Prototype Live</div>
+        <div class="ask-milestone"><span class="dot"></span>Platform Building</div>
+        <div class="ask-milestone"><span class="dot"></span>London &middot; NYC &middot; SF</div>
       </div>
     </div>
 
-    <!-- 13: Founder -->
-    <div class="slide slide-founder" data-slide="12">
-      <div class="founder-header">
+    <!-- 13: Team -->
+    <div class="slide slide-team" data-slide="12">
+      <div class="founder-hero">
         <div class="founder-name">Simon Judd</div>
         <div class="founder-role">FOUNDER</div>
+        <div class="founder-subtitle">Former Infantry Officer, United States Marine Corps</div>
       </div>
       <div class="founder-grid">
         <div class="founder-card">
           <div class="card-label">TECHNOLOGY</div>
           <p>
-            &#8226; Engineer at <strong>Ingonyama</strong>, leading cryptography company focused on GPU hardware acceleration<br><br>
-            &#8226; <strong>ZK Hack</strong> winner<br><br>
-            &#8226; Independent research in interactive proof systems at <strong>EPFL</strong>, Switzerland
+            &#8226; Engineer at <a href="https://www.youtube.com/watch?v=lG3l8Wnw5uU&feature=youtu.be" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>Ingonyama</strong></a>, leading cryptography company focused on GPU hardware acceleration<br><br>
+            &#8226; <a href="https://www.youtube.com/watch?v=DFFgxRoDyzs&t=2498s" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>ZK Hack</strong></a> winner<br><br>
+            &#8226; Independent research in interactive proof systems at <a href="https://www.youtube.com/watch?v=vOWxBhfdP6I" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>EPFL</strong></a>, Switzerland
           </p>
         </div>
         <div class="founder-card">
           <div class="card-label">BUSINESS</div>
           <p>
             &#8226; Raised <strong>$10M from S-tier investors</strong> while still in business school<br><br>
-            &#8226; Helped grow <strong>Index Coop</strong> from $5M to <strong>$500M AUM</strong>
+            &#8226; Helped grow <strong>Index Coop</strong> from $5M to <strong>$500M AUM</strong><br><br>
+            &#8226; <strong>Fertitta Veterans MBA</strong>, NYU Stern
           </p>
         </div>
-        <div class="founder-card">
-          <div class="card-label">LEADERSHIP</div>
-          <p>Former <strong>Infantry Officer</strong>, United States Marine Corps. Leadership forged under pressure.</p>
+      </div>
+      <div class="team-section-label">TEAM</div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-name">Khaled Suliman</div>
+          <div class="team-role">LEAD ENGINEER</div>
+          <p>
+            &#8226; MSc Cybersecurity, <strong>Technical University of Ko&scaron;ice</strong><br><br>
+            &#8226; <strong>2nd place ZK Hack Berlin</strong> &mdash; zk-anticheat<br><br>
+            &#8226; Speaker at <strong>ZK Summit</strong> (Rome) &amp; <strong>ITASEC26</strong><br><br>
+            &#8226; Top-ranked <strong>CTF competitor</strong>, multiple wins
+          </p>
         </div>
       </div>
     </div>
@@ -889,35 +1156,25 @@
   <div class="progress" id="progress"></div>
 
   <script>
-    // --- Password gate ---
-    const PASS = 'HomeDAO';
-    const gate = document.getElementById('password-gate');
-    const deckContent = document.getElementById('deck-content');
+    // --- Start overlay ---
+    const startOverlay = document.getElementById('start-overlay');
+    let deckStarted = false;
 
-    if (sessionStorage.getItem('katechon-auth') === 'true') {
-      gate.style.display = 'none';
-      deckContent.style.display = '';
-    } else {
-      document.getElementById('password-input').focus();
+    function dismissOverlay() {
+      if (deckStarted) return;
+      deckStarted = true;
+      startOverlay.style.opacity = '0';
+      setTimeout(() => { startOverlay.style.display = 'none'; }, 400);
+      ensureBgMusic();
+      if (avatarVisible && narrationEnabled) playNarration(current);
     }
 
-    document.getElementById('password-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const val = document.getElementById('password-input').value;
-      if (val === PASS) {
-        sessionStorage.setItem('katechon-auth', 'true');
-        gate.style.display = 'none';
-        deckContent.style.display = '';
-      } else {
-        document.getElementById('password-error').style.opacity = '1';
-        document.getElementById('password-input').value = '';
-        document.getElementById('password-input').focus();
-      }
-    });
+    startOverlay.addEventListener('click', dismissOverlay);
 
     const slides = document.querySelectorAll('.slide');
     const total = slides.length;
     let current = 0;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     // --- Background music (loops forever) ---
     const bgMusic = new Audio('../assets/Cloud_Sync_2026-03-09T120527.mp3');
@@ -927,6 +1184,7 @@
     // Audio requires user interaction to start
     let bgStarted = false;
     function ensureBgMusic() {
+      if (isMobile) return;
       if (!bgStarted) { bgStarted = true; bgMusic.play().catch(() => {}); }
     }
 
@@ -956,6 +1214,7 @@
     }
 
     async function playNarration(slideIndex) {
+      if (isMobile) return;
       const pet = document.getElementById('avatar-pet');
       if (!pet || !pet.contentWindow) return;
       const payload = await loadPayload(slideIndex);
@@ -967,15 +1226,16 @@
     function goTo(n) {
       if (n < 0 || n >= total) return;
       stopNarration();
-      slides[current].classList.remove('active');
+      if (!isMobile) slides[current].classList.remove('active');
       const vid = slides[current].querySelector('video');
       if (vid) vid.pause();
       current = n;
-      slides[current].classList.add('active');
+      if (!isMobile) slides[current].classList.add('active');
       document.getElementById('current').textContent = current + 1;
       document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
       ensureBgMusic();
       if (avatarVisible && narrationEnabled) playNarration(n);
+      if (isMobile) slides[current].scrollIntoView({ behavior: 'smooth' });
     }
 
     // Separate avatar and sound toggles
@@ -1004,6 +1264,11 @@
     document.getElementById('next').addEventListener('click', () => goTo(current + 1));
 
     document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' && !deckStarted) {
+        e.preventDefault();
+        dismissOverlay();
+        return;
+      }
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
         e.preventDefault();
         goTo(current + 1);
@@ -1016,12 +1281,14 @@
       if (e.key === 'End') goTo(total - 1);
     });
 
-    let touchStartX = 0;
-    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
-    document.addEventListener('touchend', (e) => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) dx > 0 ? goTo(current - 1) : goTo(current + 1);
-    });
+    if (!isMobile) {
+      let touchStartX = 0;
+      document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+      document.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 50) dx > 0 ? goTo(current - 1) : goTo(current + 1);
+      });
+    }
 
     // Initial slide (no narration yet — needs user interaction)
     slides[0].classList.add('active');
@@ -1079,6 +1346,36 @@
     }, { passive: false });
 
     layoutArc();
+
+    // --- Mobile: scroll-driven slide tracking ---
+    if (isMobile) {
+      // All slides visible in scroll layout
+      slides.forEach(s => s.classList.add('active'));
+
+      // Track which slide is in view
+      const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+            const idx = parseInt(entry.target.dataset.slide);
+            if (!isNaN(idx) && idx !== current) {
+              stopNarration();
+              const vid = slides[current].querySelector('video');
+              if (vid) vid.pause();
+              current = idx;
+              document.getElementById('current').textContent = current + 1;
+              document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+              ensureBgMusic();
+              if (avatarVisible && narrationEnabled) playNarration(current);
+            }
+          }
+        });
+      }, { threshold: 0.4 });
+
+      slides.forEach(s => scrollObserver.observe(s));
+
+      // Auto-rotate the stream arc on mobile (no wheel available)
+      setInterval(() => { arcActive++; layoutArc(); }, 3000);
+    }
   </script>
 </body>
 </html>

@@ -12,6 +12,8 @@ OUT_DIR="assets/narration"
 
 mkdir -p "$OUT_DIR"
 
+# Use with-timestamps endpoint for character-level alignment (lip sync)
+
 declare -a NARRATIONS=(
   # Slide 0: Title
   "Katechon Technology. Real-time content generation."
@@ -57,17 +59,19 @@ declare -a NARRATIONS=(
 )
 
 for i in "${!NARRATIONS[@]}"; do
-  OUTFILE="$OUT_DIR/slide-${i}.mp3"
-  if [ -f "$OUTFILE" ]; then
-    echo "Slide $i: already exists, skipping"
+  TTS_FILE="$OUT_DIR/slide-${i}.tts.json"
+  MP3_FILE="$OUT_DIR/slide-${i}.mp3"
+
+  if [ -f "$TTS_FILE" ]; then
+    echo "Slide $i: .tts.json exists, skipping"
     continue
   fi
-  echo "Slide $i: generating..."
+  echo "Slide $i: generating with timestamps..."
 
   TEXT="${NARRATIONS[$i]}"
 
   curl -s -X POST \
-    "https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}" \
+    "https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/with-timestamps" \
     -H "xi-api-key: ${API_KEY}" \
     -H "Content-Type: application/json" \
     -d "$(jq -n \
@@ -76,6 +80,7 @@ for i in "${!NARRATIONS[@]}"; do
       '{
         text: $text,
         model_id: $model,
+        output_format: "mp3_44100_128",
         voice_settings: {
           stability: 0.5,
           similarity_boost: 0.75,
@@ -83,9 +88,18 @@ for i in "${!NARRATIONS[@]}"; do
           use_speaker_boost: true
         }
       }')" \
-    --output "$OUTFILE"
+    --output "$TTS_FILE"
 
-  echo "Slide $i: done ($(du -h "$OUTFILE" | cut -f1))"
+  # Extract MP3 from JSON response for preview/fallback
+  python3 -c "
+import json, base64
+with open('$TTS_FILE') as f:
+    d = json.load(f)
+with open('$MP3_FILE', 'wb') as f:
+    f.write(base64.b64decode(d['audio_base64']))
+"
+
+  echo "Slide $i: done ($(du -h "$TTS_FILE" | cut -f1) json, $(du -h "$MP3_FILE" | cut -f1) mp3)"
 done
 
 echo ""
