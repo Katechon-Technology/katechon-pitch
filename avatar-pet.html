@@ -56,65 +56,59 @@ async function loadModel() {
     try { model.expression(exp); } catch (e) {}
   }, 8000);
 
-  // --- Volume-driven lip sync (Open-LLM-VTuber style) ---
-  let currentMouth = 0;
-  let targetMouth = 0;
-  let volumeIndex = 0;
-  let volumes = null;
-  let sliceLength = 20;
-  let playbackStart = 0;
+  // --- Real-time lip sync via AnalyserNode (same pattern as claudetorio's _wavFileHandler) ---
   let audioCtx = null;
+  let analyser = null;
+  let analyserData = null;
   let currentSource = null;
+  let currentMouth = 0;
+  const RMS_GAIN = 1.5; // boost factor (matches claudetorio's Math.min(1, rms * 1.5))
 
-  // Ticker: interpolate mouth toward current volume target
-  const origUpdate = model.internalModel.update.bind(model.internalModel);
-  model.internalModel.update = function(dt, now) {
-    origUpdate(dt, now);
-
-    if (volumes && currentSource) {
-      // Determine which volume slice we're in based on elapsed time
-      const elapsed = (audioCtx.currentTime - playbackStart) * 1000;
-      const idx = Math.floor(elapsed / sliceLength);
-      if (idx < volumes.length) {
-        targetMouth = volumes[idx];
-      } else {
-        targetMouth = 0;
-      }
-    } else {
-      targetMouth = 0;
+  function getRms() {
+    if (!analyser || !currentSource) return 0;
+    analyser.getByteTimeDomainData(analyserData);
+    let sum = 0;
+    for (let i = 0; i < analyserData.length; i++) {
+      const v = (analyserData[i] - 128) / 128;
+      sum += v * v;
     }
+    return Math.min(1, Math.sqrt(sum / analyserData.length) * RMS_GAIN);
+  }
 
-    // Smooth toward target
-    const speed = targetMouth > currentMouth ? 0.7 : 0.4;
-    currentMouth += (targetMouth - currentMouth) * speed;
+  // Drive ParamA from live audio RMS — runs right before coreModel.update()
+  model.internalModel.on('beforeModelUpdate', () => {
+    const target = getRms();
+    const speed = target > currentMouth ? 0.7 : 0.4;
+    currentMouth += (target - currentMouth) * speed;
     if (currentMouth < 0.01) currentMouth = 0;
+    model.internalModel.coreModel.setParameterValueById('ParamA', currentMouth);
+  });
 
-    this.coreModel.setParameterValueById('ParamA', currentMouth);
-  };
+  function ensureAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      analyserData = new Uint8Array(analyser.fftSize);
+      analyser.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
 
   function stopAudio() {
     if (currentSource) {
       try { currentSource.stop(); } catch (e) {}
       currentSource = null;
     }
-    volumes = null;
-    targetMouth = 0;
+    currentMouth = 0;
   }
 
   function playPayload(payload) {
     stopAudio();
+    if (!payload.audio) return;
 
-    if (!payload.audio || !payload.volumes || !payload.volumes.length) return;
+    ensureAudioCtx();
 
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    volumes = payload.volumes;
-    sliceLength = payload.slice_length || 20;
-
-    // Decode base64 WAV and play
     const raw = atob(payload.audio);
     const buf = new Uint8Array(raw.length);
     for (let i = 0; i < raw.length; i++) buf[i] = raw.charCodeAt(i);
@@ -122,16 +116,11 @@ async function loadModel() {
     audioCtx.decodeAudioData(buf.buffer).then(audioBuffer => {
       const source = audioCtx.createBufferSource();
       source.buffer = audioBuffer;
-      source.connect(audioCtx.destination);
-      playbackStart = audioCtx.currentTime;
+      source.connect(analyser); // route through analyser → destination
       source.start(0);
       currentSource = source;
       source.onended = () => {
-        if (currentSource === source) {
-          currentSource = null;
-          volumes = null;
-          targetMouth = 0;
-        }
+        if (currentSource === source) currentSource = null;
       };
     }).catch(err => console.error('[avatar] audio decode error:', err));
   }
