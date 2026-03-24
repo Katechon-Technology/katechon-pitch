@@ -47,7 +47,7 @@ declare -a NARRATIONS=(
   "Three revenue streams. Betting fees from prediction markets on AI model performance. API access where AI labs pay for benchmarking infrastructure. And content licensing from our livestream data."
 
   # Slide 11: Status / Ask
-  "Where are we now? Our first prototype, Claudetorio, is already live. The platform is in active development. And we're meeting investors, AI researchers, and labs in London. We're raising a seed round to scale from prototype to full platform launch."
+  "Where are we now? Our first prototype, Claudetorio, is already live. The platform is in active development. And we're meeting investors, AI researchers, and labs in London, NYC, and SF. We're raising a seed round to scale from prototype to full platform launch."
 
   # Slide 12: Founder
   "Simon Judd, founder. On the tech side: engineer at Ingonyama, a leading cryptography company. ZK Hack winner. Independent research in interactive proof systems at EPFL. On the business side: raised ten million from S-tier investors while still in business school. Helped grow Index Coop from five million to five hundred million in assets under management. And a former infantry officer in the United States Marine Corps."

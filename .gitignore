@@ -1,4 +1,11 @@
 .vercel
 .env*.local
-libs/
-live2d-models/
+
+# Ignore large/unnecessary binary files in libs
+libs/*
+!libs/live2dcubismcore.min.js
+!libs/live2d.min.js
+
+# Only include the mao_pro model used by the avatar
+live2d-models/*
+!live2d-models/mao_pro/

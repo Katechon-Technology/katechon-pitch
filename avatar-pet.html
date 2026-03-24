@@ -17,11 +17,10 @@
 <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display@0.4.0/dist/index.min.js"></script>
 <script>
 if (typeof PIXI === 'undefined' || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
-  // Live2D SDK not available — stay silent
+  console.error('[avatar] PIXI or Live2D not loaded');
 } else {
 
 const MODEL_URL = '/live2d-models/mao_pro/runtime/mao_pro.model3.json';
-
 const W = 950;
 const H = window.innerHeight;
 
@@ -41,19 +40,15 @@ async function loadModel() {
 
   app.stage.addChild(model);
 
-  // Position: center horizontally, anchor at bottom so head is at top
   const scale = 0.23;
   model.scale.set(scale);
   model.anchor.set(0.5, 0.5);
   model.x = W / 2;
   model.y = H * 1.35;
 
-  // Start idle motion
   try {
     model.motion('Idle', 0, PIXI.live2d.MotionPriority.IDLE);
   } catch (e) {}
-
-
 
   // Random expression cycling
   setInterval(() => {
@@ -61,95 +56,95 @@ async function loadModel() {
     try { model.expression(exp); } catch (e) {}
   }, 8000);
 
-  // --- Narration + lip sync (all in iframe) ---
-  let currentSource = null;
+  // --- Volume-driven lip sync (Open-LLM-VTuber style) ---
+  let currentMouth = 0;
+  let targetMouth = 0;
+  let volumeIndex = 0;
+  let volumes = null;
+  let sliceLength = 20;
+  let playbackStart = 0;
   let audioCtx = null;
-  let analyser = null;
-  let dataArray = null;
-  let rawMouth = 0;
-  let smoothMouth = 0;
-  const SMOOTH_UP = 0.8;     // snap open fast
-  const SMOOTH_DOWN = 0.35;  // close reasonably quickly
+  let currentSource = null;
 
-  // Sample audio + smooth + apply lip sync all in one ticker
-  app.ticker.add(() => {
-    if (analyser && currentSource) {
-      analyser.getByteFrequencyData(dataArray);
-      // Sample speech-range frequencies (~100Hz-2500Hz)
-      const startBin = 2;
-      const endBin = 50;
-      let sum = 0;
-      let peak = 0;
-      for (let i = startBin; i < endBin && i < dataArray.length; i++) {
-        sum += dataArray[i];
-        if (dataArray[i] > peak) peak = dataArray[i];
+  // Ticker: interpolate mouth toward current volume target
+  const origUpdate = model.internalModel.update.bind(model.internalModel);
+  model.internalModel.update = function(dt, now) {
+    origUpdate(dt, now);
+
+    if (volumes && currentSource) {
+      // Determine which volume slice we're in based on elapsed time
+      const elapsed = (audioCtx.currentTime - playbackStart) * 1000;
+      const idx = Math.floor(elapsed / sliceLength);
+      if (idx < volumes.length) {
+        targetMouth = volumes[idx];
+      } else {
+        targetMouth = 0;
       }
-      const avg = sum / (endBin - startBin);
-      // Blend average + peak for snappy but stable response
-      const mixed = avg * 0.4 + peak * 0.6;
-      // Normalize against typical speech energy range
-      rawMouth = Math.min(1, Math.max(0, (mixed - 30) / 130));
-      if (rawMouth < 0.05) rawMouth = 0;
     } else {
-      rawMouth = 0;
+      targetMouth = 0;
     }
 
-    const factor = rawMouth > smoothMouth ? SMOOTH_UP : SMOOTH_DOWN;
-    smoothMouth += (rawMouth - smoothMouth) * factor;
-    if (smoothMouth < 0.01) smoothMouth = 0;
+    // Smooth toward target
+    const speed = targetMouth > currentMouth ? 0.7 : 0.4;
+    currentMouth += (targetMouth - currentMouth) * speed;
+    if (currentMouth < 0.01) currentMouth = 0;
 
-    // Force lip sync param directly on core model
-    const cm = model.internalModel.coreModel;
-    const ids = cm._model.parameters.ids;
-    const idx = ids.indexOf('ParamA');
-    if (idx >= 0) {
-      cm._model.parameters.values[idx] = smoothMouth;
-    }
-  });
+    this.coreModel.setParameterValueById('ParamA', currentMouth);
+  };
 
   function stopAudio() {
     if (currentSource) {
       try { currentSource.stop(); } catch (e) {}
       currentSource = null;
     }
-    rawMouth = 0;
+    volumes = null;
+    targetMouth = 0;
   }
 
-  function playAudio(url) {
+  function playPayload(payload) {
     stopAudio();
+
+    if (!payload.audio || !payload.volumes || !payload.volumes.length) return;
 
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 512;
-      analyser.smoothingTimeConstant = 0.3;
-      analyser.connect(audioCtx.destination);
-      dataArray = new Uint8Array(analyser.frequencyBinCount);
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    fetch(url)
-      .then(r => r.arrayBuffer())
-      .then(buf => audioCtx.decodeAudioData(buf))
-      .then(audioBuffer => {
-        const source = audioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(analyser);
-        source.start(0);
-        currentSource = source;
-        source.onended = () => {
-          if (currentSource === source) { currentSource = null; rawMouth = 0; }
-        };
-      })
-      .catch(err => console.error('Narration error:', err));
+    volumes = payload.volumes;
+    sliceLength = payload.slice_length || 20;
+
+    // Decode base64 WAV and play
+    const raw = atob(payload.audio);
+    const buf = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) buf[i] = raw.charCodeAt(i);
+
+    audioCtx.decodeAudioData(buf.buffer).then(audioBuffer => {
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      playbackStart = audioCtx.currentTime;
+      source.start(0);
+      currentSource = source;
+      source.onended = () => {
+        if (currentSource === source) {
+          currentSource = null;
+          volumes = null;
+          targetMouth = 0;
+        }
+      };
+    }).catch(err => console.error('[avatar] audio decode error:', err));
   }
 
+  // Listen for messages from parent (deck)
   window.addEventListener('message', (e) => {
     if (!e.data) return;
-    console.log('[avatar] message:', e.data.type, e.data.url || '');
-    if (e.data.type === 'speak') playAudio(e.data.url);
+    console.log('[avatar] message:', e.data.type);
+    if (e.data.type === 'audio') playPayload(e.data);
     if (e.data.type === 'stop') stopAudio();
   });
+
+  console.log('[avatar] model loaded, ready for audio payloads');
 }
 
 loadModel().catch(err => console.error('[avatar] loadModel failed:', err));

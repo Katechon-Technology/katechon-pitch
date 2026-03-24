@@ -804,7 +804,7 @@
           <div class="label">WHERE WE ARE</div>
           <div class="milestone"><span>&#8594;</span> First prototype (Claudetorio) live</div>
           <div class="milestone"><span>&#8594;</span> Platform in active development</div>
-          <div class="milestone"><span>&#8594;</span> Meeting investors, AI researchers, and labs in London</div>
+          <div class="milestone"><span>&#8594;</span> Meeting investors, AI researchers, and labs in London, NYC, and SF</div>
         </div>
         <div class="section">
           <div class="label">THE ASK</div>
@@ -930,8 +930,24 @@
       if (!bgStarted) { bgStarted = true; bgMusic.play().catch(() => {}); }
     }
 
-    // --- Narration system ---
-    // All audio playback + lip sync happens inside the iframe
+    // --- Narration system (volume-driven lip sync) ---
+    // Pre-computed payloads: base64 WAV + volumes array per slide
+    const payloadCache = {};
+
+    async function loadPayload(slideIndex) {
+      if (payloadCache[slideIndex]) return payloadCache[slideIndex];
+      try {
+        const resp = await fetch(`../assets/narration/slide-${slideIndex}.json`);
+        if (!resp.ok) return null;
+        const payload = await resp.json();
+        payloadCache[slideIndex] = payload;
+        return payload;
+      } catch (e) {
+        console.error('[deck] failed to load payload for slide', slideIndex, e);
+        return null;
+      }
+    }
+
     function stopNarration() {
       const pet = document.getElementById('avatar-pet');
       if (pet && pet.contentWindow) {
@@ -939,14 +955,13 @@
       }
     }
 
-    function playNarration(slideIndex) {
+    async function playNarration(slideIndex) {
       const pet = document.getElementById('avatar-pet');
-      console.log('[deck] playNarration', slideIndex, 'iframe:', !!pet, 'contentWindow:', !!(pet && pet.contentWindow));
-      if (pet && pet.contentWindow) {
-        const url = new URL(`../assets/narration/slide-${slideIndex}.mp3`, window.location.href).href;
-        console.log('[deck] posting speak:', url);
-        pet.contentWindow.postMessage({ type: 'speak', url }, '*');
-      }
+      if (!pet || !pet.contentWindow) return;
+      const payload = await loadPayload(slideIndex);
+      if (!payload) return;
+      console.log('[deck] sending audio payload for slide', slideIndex, 'volumes:', payload.volumes.length);
+      pet.contentWindow.postMessage(payload, '*');
     }
 
     function goTo(n) {
@@ -1012,6 +1027,9 @@
     slides[0].classList.add('active');
     document.getElementById('current').textContent = '1';
     document.getElementById('progress').style.width = (1 / total * 100) + '%';
+
+    // Preload first few narration payloads
+    for (let i = 0; i < Math.min(3, total); i++) loadPayload(i);
 
     // Stream halfmoon arc — infinite loop
     const arc = document.getElementById('streamArc');
