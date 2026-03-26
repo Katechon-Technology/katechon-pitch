@@ -994,7 +994,7 @@
     <!-- 6: Video Demo -->
     <div class="slide slide-video" data-slide="5">
       <div class="label">DEMO</div>
-      <video controls preload="metadata">
+      <video controls autoplay muted playsinline preload="auto">
         <source src="../assets/demo.mp4" type="video/mp4">
       </video>
     </div>
@@ -1025,22 +1025,8 @@
       </div>
     </div>
 
-    <!-- 9: Evolution -->
-    <div class="slide slide-evolution" data-slide="8">
-      <div class="starts">What starts as a simple question</div>
-      <div class="simple-q">"How can we live stream an AI playing video games?"</div>
-      <div class="divider"></div>
-      <div class="becomes">Becomes</div>
-      <div class="big-claim">The next evolution of media<br>on the internet</div>
-    </div>
-
-    <!-- 10: Media Definition -->
-    <div class="slide slide-media" data-slide="9">
-      <img src="../assets/media-definition.png" alt="Media definition">
-    </div>
-
-    <!-- 11: Monetization -->
-    <div class="slide slide-monetization" data-slide="10">
+    <!-- 9: Monetization -->
+    <div class="slide slide-monetization" data-slide="8">
       <div class="label">MONETIZATION</div>
       <div class="grid-3">
         <div class="card">
@@ -1058,8 +1044,8 @@
       </div>
     </div>
 
-    <!-- 12: The Ask -->
-    <div class="slide slide-ask" data-slide="11">
+    <!-- 10: The Ask -->
+    <div class="slide slide-ask" data-slide="9">
       <div class="ask-hero"><span class="accent">Seed</span><br>Round</div>
       <div class="ask-tagline">The next era of media starts here. Get in.</div>
       <div class="ask-milestones">
@@ -1069,8 +1055,8 @@
       </div>
     </div>
 
-    <!-- 13: Team -->
-    <div class="slide slide-team" data-slide="12">
+    <!-- 11: Team -->
+    <div class="slide slide-team" data-slide="10">
       <div class="founder-hero">
         <div class="founder-name">Simon Judd</div>
         <div class="founder-role">FOUNDER</div>
@@ -1109,8 +1095,8 @@
       </div>
     </div>
 
-    <!-- 14: Closing -->
-    <div class="slide slide-closing" data-slide="13">
+    <!-- 12: Closing -->
+    <div class="slide slide-closing" data-slide="11">
       <h1>KATECHON<br>TECHNOLOGY</h1>
       <div class="cta">Let's talk.</div>
       <div class="qr-row">
@@ -1144,7 +1130,7 @@
     allow="autoplay"
   ></iframe>
 
-  <div class="slide-counter"><span id="current">1</span> / <span id="total">14</span></div>
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">12</span></div>
   <div class="nav">
     <button id="prev">&#8249;</button>
     <button id="next">&#8250;</button>
@@ -1234,6 +1220,8 @@
       document.getElementById('current').textContent = current + 1;
       document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
       ensureBgMusic();
+      const newVid = slides[current].querySelector('video');
+      if (newVid) { newVid.currentTime = 0; newVid.play().catch(() => {}); }
       if (avatarVisible && narrationEnabled) playNarration(n);
       if (isMobile) slides[current].scrollIntoView({ behavior: 'smooth' });
     }
