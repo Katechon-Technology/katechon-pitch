@@ -50,9 +50,11 @@ async function loadModel() {
     model.motion('Idle', 0, PIXI.live2d.MotionPriority.IDLE);
   } catch (e) {}
 
-  // Random expression cycling
+  // Random expression cycling — only use expressions that keep eyes open
+  // exp_02 & exp_03 close eyes (ParamEyeLOpen=0), exp_06 has crossed eyeballs
+  const safeExpressions = [0, 3, 4, 6, 7]; // exp_01, exp_04, exp_05, exp_07, exp_08
   setInterval(() => {
-    const exp = Math.floor(Math.random() * 8);
+    const exp = safeExpressions[Math.floor(Math.random() * safeExpressions.length)];
     try { model.expression(exp); } catch (e) {}
   }, 8000);
 
