@@ -1136,8 +1136,8 @@
     <button id="next">&#8250;</button>
   </div>
   <div class="nav nav-left">
-    <button id="avatar-toggle" title="Toggle avatar">&#9787;</button>
-    <button id="sound-toggle" title="Toggle narration">&#9834;</button>
+    <button id="avatar-toggle" title="Toggle avatar & voice">&#9787;</button>
+    <button id="music-toggle" title="Toggle music">&#9834;</button>
   </div>
   <div class="progress" id="progress"></div>
 
@@ -1152,7 +1152,7 @@
       startOverlay.style.opacity = '0';
       setTimeout(() => { startOverlay.style.display = 'none'; }, 400);
       ensureBgMusic();
-      if (avatarVisible && narrationEnabled) playNarration(current);
+      if (avatarVisible) playNarration(current);
     }
 
     startOverlay.addEventListener('click', dismissOverlay);
@@ -1222,15 +1222,13 @@
       ensureBgMusic();
       const newVid = slides[current].querySelector('video');
       if (newVid) { newVid.currentTime = 0; newVid.play().catch(() => {}); }
-      if (avatarVisible && narrationEnabled) playNarration(n);
+      if (avatarVisible) playNarration(n);
       if (isMobile) slides[current].scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Separate avatar and sound toggles
+    // Button 1: avatar + voice together
     let avatarVisible = true;
-    let narrationEnabled = true;
     const avatarToggleBtn = document.getElementById('avatar-toggle');
-    const soundToggleBtn = document.getElementById('sound-toggle');
     const avatarIframe = document.getElementById('avatar-pet');
 
     avatarToggleBtn.addEventListener('click', () => {
@@ -1238,14 +1236,18 @@
       avatarIframe.style.display = avatarVisible ? '' : 'none';
       avatarToggleBtn.style.opacity = avatarVisible ? '1' : '0.4';
       if (!avatarVisible) stopNarration();
-      else if (narrationEnabled) playNarration(current);
+      else playNarration(current);
     });
 
-    soundToggleBtn.addEventListener('click', () => {
-      narrationEnabled = !narrationEnabled;
-      soundToggleBtn.style.opacity = narrationEnabled ? '1' : '0.4';
-      if (!narrationEnabled) stopNarration();
-      else if (avatarVisible) playNarration(current);
+    // Button 2: background music
+    let musicEnabled = true;
+    const musicToggleBtn = document.getElementById('music-toggle');
+
+    musicToggleBtn.addEventListener('click', () => {
+      musicEnabled = !musicEnabled;
+      musicToggleBtn.style.opacity = musicEnabled ? '1' : '0.4';
+      if (musicEnabled) { bgMusic.play().catch(() => {}); }
+      else { bgMusic.pause(); }
     });
 
     document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
@@ -1353,7 +1355,7 @@
               document.getElementById('current').textContent = current + 1;
               document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
               ensureBgMusic();
-              if (avatarVisible && narrationEnabled) playNarration(current);
+              if (avatarVisible) playNarration(current);
             }
           }
         });
