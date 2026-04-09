@@ -594,6 +594,159 @@
     }
 
     /* ═══════════════════════════════════════
+       SLIDE: MOMENT — Simon Judd video
+    ═══════════════════════════════════════ */
+    .slide-moment {
+      background: #000;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 4vw;
+      padding: 3vh 5vw;
+      overflow: hidden;
+    }
+
+    /* Deep ambient glow behind the frame */
+    .slide-moment::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 38% 50%, rgba(224,74,47,0.10) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Video frame ── */
+    .moment-frame {
+      position: relative;
+      height: 88vh;
+      aspect-ratio: 9 / 16;
+      flex-shrink: 0;
+      z-index: 1;
+      box-shadow:
+        0 0 0 1px var(--accent),
+        0 0 30px rgba(224,74,47,0.55),
+        0 0 80px rgba(224,74,47,0.28),
+        0 0 160px rgba(224,74,47,0.12);
+    }
+
+    .moment-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Subtle scanlines */
+    .moment-scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.04) 3px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Animated corner brackets */
+    .moment-corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: var(--accent);
+      border-style: solid;
+      z-index: 3;
+    }
+    .moment-corner.tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; animation: mc 2.4s ease-in-out infinite; }
+    .moment-corner.tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; animation: mc 2.4s ease-in-out 0.6s infinite; }
+    .moment-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; animation: mc 2.4s ease-in-out 1.2s infinite; }
+    .moment-corner.br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; animation: mc 2.4s ease-in-out 1.8s infinite; }
+
+    @keyframes mc {
+      0%,100% { opacity: 1; filter: drop-shadow(0 0 6px var(--accent)); }
+      50%      { opacity: 0.35; filter: none; }
+    }
+
+    /* ── Right bio panel ── */
+    .moment-bio {
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.4rem;
+      max-width: 340px;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
+    }
+
+    .slide-moment.active .moment-bio {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .moment-bio-name {
+      font-size: clamp(2.4rem, 3.2vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      line-height: 1.05;
+    }
+
+    .moment-bio-name .bio-role {
+      display: block;
+      font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.35em;
+      margin-bottom: 0.6rem;
+    }
+
+    .moment-facts {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .moment-fact {
+      border-left: 2px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .moment-fact-lbl {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 0.3em;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .moment-fact-val {
+      font-size: clamp(0.8rem, 1vw, 0.92rem);
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .moment-fact-val strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .moment-quote {
+      font-size: clamp(0.85rem, 1.1vw, 1rem);
+      font-style: italic;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.8rem;
+    }
+
+    /* ═══════════════════════════════════════
        13: CLOSING
     ═══════════════════════════════════════ */
     .slide-closing {
@@ -1055,44 +1208,49 @@
       </div>
     </div>
 
-    <!-- 11: Team -->
-    <div class="slide slide-team" data-slide="10">
-      <div class="founder-hero">
-        <div class="founder-name">Simon Judd</div>
-        <div class="founder-role">FOUNDER</div>
-        <div class="founder-subtitle">Former Infantry Officer, United States Marine Corps</div>
+    <!-- 11: Moment — Simon Judd video -->
+    <div class="slide slide-moment" data-slide="10">
+
+      <!-- Cinematic video frame -->
+      <div class="moment-frame">
+        <div class="moment-corner tl"></div>
+        <div class="moment-corner tr"></div>
+        <div class="moment-corner bl"></div>
+        <div class="moment-corner br"></div>
+        <video id="simon-video"
+               src="../assets/simon_judd_is_the_moment.mp4"
+               playsinline
+               preload="none"></video>
+        <div class="moment-scanlines"></div>
       </div>
-      <div class="founder-grid">
-        <div class="founder-card">
-          <div class="card-label">TECHNOLOGY</div>
-          <p>
-            &#8226; Engineer at <a href="https://www.youtube.com/watch?v=lG3l8Wnw5uU&feature=youtu.be" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>Ingonyama</strong></a>, leading cryptography company focused on GPU hardware acceleration<br><br>
-            &#8226; <a href="https://www.youtube.com/watch?v=DFFgxRoDyzs&t=2498s" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>ZK Hack</strong></a> winner<br><br>
-            &#8226; Independent research in interactive proof systems at <a href="https://www.youtube.com/watch?v=vOWxBhfdP6I" target="_blank" style="color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px;"><strong>EPFL</strong></a>, Switzerland
-          </p>
+
+      <!-- Bio panel -->
+      <div class="moment-bio">
+        <div class="moment-bio-name">
+          <span class="bio-role">FOUNDER · KATECHON</span>
+          SIMON<br>JUDD
         </div>
-        <div class="founder-card">
-          <div class="card-label">BUSINESS</div>
-          <p>
-            &#8226; Raised <strong>$10M from S-tier investors</strong> while still in business school<br><br>
-            &#8226; Helped grow <strong>Index Coop</strong> from $5M to <strong>$500M AUM</strong><br><br>
-            &#8226; <strong>Fertitta Veterans MBA</strong>, NYU Stern
-          </p>
+
+        <div class="moment-facts">
+          <div class="moment-fact">
+            <div class="moment-fact-lbl">Military</div>
+            <div class="moment-fact-val"><strong>Infantry Officer</strong> · USMC</div>
+          </div>
+          <div class="moment-fact">
+            <div class="moment-fact-lbl">Business</div>
+            <div class="moment-fact-val">Raised <strong>$10M</strong> · NYU Stern MBA</div>
+          </div>
+          <div class="moment-fact">
+            <div class="moment-fact-lbl">Technology</div>
+            <div class="moment-fact-val"><strong>ZK cryptography</strong> · Ingonyama · EPFL</div>
+          </div>
         </div>
-      </div>
-      <div class="team-section-label">TEAM</div>
-      <div class="team-grid">
-        <div class="team-card">
-          <div class="team-name">Khaled Suliman</div>
-          <div class="team-role">LEAD ENGINEER</div>
-          <p>
-            &#8226; MSc Cybersecurity, <strong>Technical University of Ko&scaron;ice</strong><br><br>
-            &#8226; <strong>2nd place ZK Hack Berlin</strong> &mdash; zk-anticheat<br><br>
-            &#8226; Speaker at <strong>ZK Summit</strong> (Rome) &amp; <strong>ITASEC26</strong><br><br>
-            &#8226; Top-ranked <strong>CTF competitor</strong>, multiple wins
-          </p>
+
+        <div class="moment-quote">
+          "The Moment demands<br>previous suffering."
         </div>
       </div>
+
     </div>
 
     <!-- 12: Closing -->
@@ -1209,20 +1367,41 @@
       pet.contentWindow.postMessage(payload, '*');
     }
 
+    // Slide index with the self-contained Simon Judd video
+    const VIDEO_SLIDE = 10;
+
     function goTo(n) {
       if (n < 0 || n >= total) return;
       stopNarration();
       if (!isMobile) slides[current].classList.remove('active');
       const vid = slides[current].querySelector('video');
       if (vid) vid.pause();
+
+      const wasVideoSlide = (current === VIDEO_SLIDE);
       current = n;
+
       if (!isMobile) slides[current].classList.add('active');
       document.getElementById('current').textContent = current + 1;
       document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
-      ensureBgMusic();
+
+      if (current === VIDEO_SLIDE) {
+        // Kill deck audio + avatar — video is fully self-contained
+        bgMusic.pause();
+        avatarIframe.style.display = 'none';
+      } else {
+        // Restore deck state when leaving (or not on) the video slide
+        if (wasVideoSlide) {
+          if (musicEnabled) bgMusic.play().catch(() => {});
+          avatarIframe.style.display = avatarVisible ? '' : 'none';
+        } else {
+          ensureBgMusic();
+        }
+        if (avatarVisible) playNarration(current);
+      }
+
       const newVid = slides[current].querySelector('video');
       if (newVid) { newVid.currentTime = 0; newVid.play().catch(() => {}); }
-      if (avatarVisible) playNarration(n);
+
       if (isMobile) slides[current].scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -1348,14 +1527,27 @@
           if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
             const idx = parseInt(entry.target.dataset.slide);
             if (!isNaN(idx) && idx !== current) {
+              const wasVideo = (current === VIDEO_SLIDE);
               stopNarration();
               const vid = slides[current].querySelector('video');
               if (vid) vid.pause();
               current = idx;
               document.getElementById('current').textContent = current + 1;
               document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
-              ensureBgMusic();
-              if (avatarVisible) playNarration(current);
+              if (current === VIDEO_SLIDE) {
+                bgMusic.pause();
+                avatarIframe.style.display = 'none';
+              } else {
+                if (wasVideo) {
+                  if (musicEnabled) bgMusic.play().catch(() => {});
+                  avatarIframe.style.display = avatarVisible ? '' : 'none';
+                } else {
+                  ensureBgMusic();
+                }
+                if (avatarVisible) playNarration(current);
+              }
+              const newVid = slides[current].querySelector('video');
+              if (newVid) { newVid.currentTime = 0; newVid.play().catch(() => {}); }
             }
           }
         });
