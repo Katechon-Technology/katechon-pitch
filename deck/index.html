@@ -792,6 +792,188 @@
     }
 
     /* ═══════════════════════════════════════
+       EXPERIMENTAL: MEDIA EVOLUTION
+    ═══════════════════════════════════════ */
+    .slide-media-evolution {
+      background: radial-gradient(ellipse at 50% 45%, var(--accent-soft) 0%, var(--bg) 65%);
+      overflow: hidden;
+      padding: 0;
+      justify-content: flex-start; /* let header sit at top, carousel fills rest */
+    }
+
+    /* Header — normal flex item at top of slide */
+    .evo-header {
+      flex-shrink: 0;
+      padding-top: 3.5vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      z-index: 20;
+    }
+
+    .evo-era-strip {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .evo-era-tag {
+      font-size: clamp(0.52rem, 0.78vw, 0.7rem);
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .evo-era-tag--gen { color: var(--accent); }
+
+    .evo-era-sep {
+      color: var(--text-dim);
+      opacity: 0.4;
+      font-size: 0.75rem;
+    }
+
+    /* Carousel viewport */
+    .evo-carousel {
+      position: relative; /* anchor for absolute row-items */
+      flex: 1;            /* fill remaining height after header */
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: ns-resize;
+    }
+
+    /* Each row — absolutely stacked, animated in/out */
+    .evo-row-item {
+      position: absolute;
+      width: min(88vw, 1160px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.6s ease;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+
+    .evo-row-eyebrow {
+      font-size: clamp(0.55rem, 0.85vw, 0.76rem);
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-dim);
+      transition: color 0.4s ease, opacity 0.4s ease;
+    }
+
+    .evo-row-item.active .evo-row-eyebrow { color: var(--text-muted); }
+
+    .evo-row-boxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    /* Box */
+    .evo-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .evo-box--gen {
+      border-color: rgba(224, 74, 47, 0.45);
+      box-shadow: 0 0 32px var(--accent-glow), 0 0 64px rgba(224,74,47,0.06);
+    }
+
+    /* Square image */
+    .evo-img-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      background: #0d0d0d;
+      overflow: hidden;
+    }
+
+    .evo-img-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.45) brightness(0.65);
+      transition: filter 0.55s ease;
+    }
+
+    .evo-row-item.active .evo-img-wrap img        { filter: saturate(0.82) brightness(0.92); }
+    .evo-row-item.active .evo-box--gen .evo-img-wrap img { filter: saturate(1.1) brightness(1.0); }
+
+    /* Scanlines on non-gen images in active row */
+    .evo-row-item.active .evo-box:not(.evo-box--gen) .evo-img-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
+      );
+      pointer-events: none; z-index: 1;
+    }
+
+    /* Accent vignette on gen box */
+    .evo-row-item.active .evo-box--gen .evo-img-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 110%, rgba(224,74,47,0.14) 0%, transparent 60%);
+      pointer-events: none; z-index: 1;
+    }
+
+    .evo-caption {
+      padding: 0.5rem 0.7rem 0.55rem;
+      font-size: clamp(0.5rem, 0.72vw, 0.67rem);
+      color: var(--text-muted);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .evo-box--gen .evo-caption {
+      color: var(--accent);
+      border-top-color: rgba(224,74,47,0.22);
+    }
+
+    /* Navigation dots */
+    .evo-dots {
+      position: absolute;
+      right: 2.2vw;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      z-index: 30;
+    }
+
+    .evo-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .evo-dot.active {
+      background: var(--accent);
+      transform: scale(1.5);
+    }
+
+    /* ═══════════════════════════════════════
        NAVIGATION
     ═══════════════════════════════════════ */
     .nav {
@@ -1269,6 +1451,92 @@
       </div>
     </div>
 
+    <!-- 13: Media Evolution (Experimental) -->
+    <div class="slide slide-media-evolution" data-slide="12">
+
+      <!-- Fixed header -->
+      <div class="evo-header">
+        <div class="label">THE EVOLUTION OF MEDIA</div>
+        <div class="evo-era-strip">
+          <span class="evo-era-tag">BROADCAST</span>
+          <span class="evo-era-sep">→</span>
+          <span class="evo-era-tag">DIGITAL</span>
+          <span class="evo-era-sep">→</span>
+          <span class="evo-era-tag evo-era-tag--gen">GENERATIVE</span>
+        </div>
+      </div>
+
+      <!-- Carousel -->
+      <div class="evo-carousel" id="evoCarousel">
+
+        <!-- Row 0: Video -->
+        <div class="evo-row-item" data-row="0">
+          <div class="evo-row-eyebrow">VIDEO</div>
+          <div class="evo-row-boxes">
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/tv.jpg" alt="Television" loading="lazy"></div>
+              <div class="evo-caption">Television</div>
+            </div>
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/youtube.jpg" alt="YouTube" loading="lazy"></div>
+              <div class="evo-caption">YouTube</div>
+            </div>
+            <div class="evo-box evo-box--gen">
+              <div class="evo-img-wrap"><img src="../assets/evolution/ai-video.jpg" alt="AI Video" loading="lazy"></div>
+              <div class="evo-caption">AI Video</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 1: News -->
+        <div class="evo-row-item" data-row="1">
+          <div class="evo-row-eyebrow">NEWS</div>
+          <div class="evo-row-boxes">
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/newspaper.jpg" alt="Newspaper" loading="lazy"></div>
+              <div class="evo-caption">Newspapers</div>
+            </div>
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/twitter.jpg" alt="Twitter/X" loading="lazy"></div>
+              <div class="evo-caption">Twitter / X</div>
+            </div>
+            <div class="evo-box evo-box--gen">
+              <div class="evo-img-wrap"><img src="../assets/evolution/ai-news.jpg" alt="AI News" loading="lazy"></div>
+              <div class="evo-caption">AI News</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Photos -->
+        <div class="evo-row-item" data-row="2">
+          <div class="evo-row-eyebrow">PHOTO</div>
+          <div class="evo-row-boxes">
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/magazine.jpg" alt="Magazine" loading="lazy"></div>
+              <div class="evo-caption">Magazines</div>
+            </div>
+            <div class="evo-box">
+              <div class="evo-img-wrap"><img src="../assets/evolution/instagram.jpg" alt="Instagram" loading="lazy"></div>
+              <div class="evo-caption">Instagram</div>
+            </div>
+            <div class="evo-box evo-box--gen">
+              <div class="evo-img-wrap"><img src="../assets/evolution/ai-photo.jpg" alt="AI Photos" loading="lazy"></div>
+              <div class="evo-caption">AI Photos</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row indicator dots -->
+      <div class="evo-dots">
+        <div class="evo-dot active" data-dot="0"></div>
+        <div class="evo-dot" data-dot="1"></div>
+        <div class="evo-dot" data-dot="2"></div>
+      </div>
+
+    </div>
+
   </div>
 
   <!-- Avatar Pet Mode (2x size, cropped to top 1/3) -->
@@ -1288,7 +1556,7 @@
     allow="autoplay"
   ></iframe>
 
-  <div class="slide-counter"><span id="current">1</span> / <span id="total">12</span></div>
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">13</span></div>
   <div class="nav">
     <button id="prev">&#8249;</button>
     <button id="next">&#8250;</button>
@@ -1557,6 +1825,54 @@
 
       // Auto-rotate the stream arc on mobile (no wheel available)
       setInterval(() => { arcActive++; layoutArc(); }, 3000);
+    }
+
+    // ── Evolution media carousel (infinite ring) ─────────────
+    const evoCarousel = document.getElementById('evoCarousel');
+    if (evoCarousel) {
+      const evoRows   = Array.from(evoCarousel.querySelectorAll('.evo-row-item'));
+      const evoDotEls = Array.from(document.querySelectorAll('.evo-dot'));
+      const evoLen    = evoRows.length; // 3
+      let evoActive   = 1;             // start on middle row (NEWS)
+
+      function layoutEvo() {
+        const offset_px = window.innerHeight * 0.46;
+        const cur = mod(evoActive, evoLen);
+        evoRows.forEach((row, i) => {
+          // Shortest-arc distance around the ring
+          let d = i - cur;
+          if (d >  evoLen / 2) d -= evoLen;
+          if (d < -evoLen / 2) d += evoLen;
+          const abs = Math.abs(d);
+          row.style.transform     = `translateY(${d * offset_px}px) scale(${abs === 0 ? 1 : 0.5})`;
+          row.style.opacity       = abs === 0 ? 1 : abs === 1 ? 0.25 : 0;
+          row.style.pointerEvents = abs === 0 ? 'auto' : 'none';
+          row.classList.toggle('active', abs === 0);
+        });
+        evoDotEls.forEach((dot, i) => dot.classList.toggle('active', i === cur));
+      }
+
+      evoCarousel.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        evoActive += e.deltaY > 0 ? 1 : -1;
+        layoutEvo();
+      }, { passive: false });
+
+      evoDotEls.forEach((dot, i) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          evoActive = i;
+          layoutEvo();
+        });
+      });
+
+      // Reset to middle row when navigating to this slide
+      slides[12].addEventListener('transitionend', () => {
+        if (slides[12].classList.contains('active')) { evoActive = 1; layoutEvo(); }
+      });
+
+      layoutEvo();
     }
   </script>
 </body>
