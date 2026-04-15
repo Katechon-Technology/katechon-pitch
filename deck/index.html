@@ -1834,12 +1834,12 @@
       const evoDotEls = Array.from(document.querySelectorAll('.evo-dot'));
       const evoLen    = evoRows.length; // 3
       let evoActive   = 1;             // start on middle row (NEWS)
+      let evoCooling  = false;         // throttle gate — one step per transition
 
       function layoutEvo() {
         const offset_px = window.innerHeight * 0.46;
         const cur = mod(evoActive, evoLen);
         evoRows.forEach((row, i) => {
-          // Shortest-arc distance around the ring
           let d = i - cur;
           if (d >  evoLen / 2) d -= evoLen;
           if (d < -evoLen / 2) d += evoLen;
@@ -1852,12 +1852,29 @@
         evoDotEls.forEach((dot, i) => dot.classList.toggle('active', i === cur));
       }
 
-      evoCarousel.addEventListener('wheel', (e) => {
+      function evoStep(dir) {
+        if (evoCooling) return;
+        evoCooling = true;
+        setTimeout(() => { evoCooling = false; }, 620); // matches 0.6s CSS transition
+        evoActive += dir;
+        layoutEvo();
+      }
+
+      // Listen on the full slide — much larger hit target than the inner div
+      const evoSlide = slides[12];
+      evoSlide.addEventListener('wheel', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        evoActive += e.deltaY > 0 ? 1 : -1;
-        layoutEvo();
+        evoStep(e.deltaY > 0 ? 1 : -1);
       }, { passive: false });
+
+      // Touch swipe up/down
+      let evoTouchY = 0;
+      evoSlide.addEventListener('touchstart', (e) => { evoTouchY = e.touches[0].clientY; }, { passive: true });
+      evoSlide.addEventListener('touchend',   (e) => {
+        const dy = evoTouchY - e.changedTouches[0].clientY;
+        if (Math.abs(dy) > 40) evoStep(dy > 0 ? 1 : -1);
+      }, { passive: true });
 
       evoDotEls.forEach((dot, i) => {
         dot.addEventListener('click', (e) => {
@@ -1867,9 +1884,11 @@
         });
       });
 
-      // Reset to middle row when navigating to this slide
-      slides[12].addEventListener('transitionend', () => {
-        if (slides[12].classList.contains('active')) { evoActive = 1; layoutEvo(); }
+      // Reset to middle row when the SLIDE itself fades in (not row transitions bubbling up)
+      slides[12].addEventListener('transitionend', (e) => {
+        if (e.target === slides[12] && e.propertyName === 'opacity' && slides[12].classList.contains('active')) {
+          evoActive = 1; layoutEvo();
+        }
       });
 
       layoutEvo();
