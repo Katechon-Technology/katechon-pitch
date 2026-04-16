@@ -1,0 +1,18 @@
+.slide-video {
+  justify-content: center;
+  align-items: center;
+  padding: 3vh 4vw;
+  background: #0a0a0a;
+}
+.slide-video .label { margin-bottom: 2.5rem; }
+.slide-video video {
+  max-width: 90%;
+  max-height: 75vh;
+  border-radius: 12px;
+  box-shadow: 0 12px 60px rgba(0,0,0,0.8), 0 0 40px var(--accent-soft);
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .slide-video video { max-width: 95%; max-height: 55vh; }
+}

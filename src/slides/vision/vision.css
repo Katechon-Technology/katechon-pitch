@@ -1,0 +1,19 @@
+.slide-vision {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 50%, var(--accent-soft) 0%, var(--bg) 60%);
+}
+.slide-vision .statement {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.45;
+  max-width: 80%;
+}
+.slide-vision .statement em {
+  font-style: normal;
+  color: var(--accent);
+  text-shadow: 0 0 30px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+  .slide-vision .statement { max-width: 95%; }
+}

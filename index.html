@@ -4,97 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Katechon Technology</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root {
-      --bg: #111111;
-      --accent: #e04a2f;
-      --accent-glow: rgba(224, 74, 47, 0.15);
-      --accent-soft: rgba(224, 74, 47, 0.08);
-      --text: #ffffff;
-      --text-muted: #aaaaaa;
-      --border: rgba(255,255,255,0.08);
-    }
-
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      overflow: hidden;
-    }
-
-    .landing {
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
-      background: radial-gradient(ellipse at 50% 60%, var(--accent-soft) 0%, var(--bg) 70%);
-    }
-
-    h1 {
-      font-size: clamp(4rem, 9vw, 8rem);
-      font-weight: 900;
-      letter-spacing: 0.12em;
-      line-height: 1.05;
-    }
-
-    .subtitle {
-      font-size: clamp(1rem, 1.8vw, 1.3rem);
-      color: var(--text-muted);
-      margin-top: 2.5rem;
-      letter-spacing: 0.25em;
-      font-weight: 300;
-    }
-
-    .cta {
-      margin-top: 5rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1.2rem 3rem;
-      border: 1px solid rgba(224, 74, 47, 0.4);
-      border-radius: 10px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-family: inherit;
-      font-size: clamp(1rem, 1.4vw, 1.15rem);
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-decoration: none;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .cta:hover {
-      background: rgba(224, 74, 47, 0.15);
-      border-color: rgba(224, 74, 47, 0.6);
-      box-shadow: 0 0 40px var(--accent-glow);
-    }
-
-    .cta .arrow {
-      font-size: 1.3em;
-      transition: transform 0.3s ease;
-    }
-
-    .cta:hover .arrow {
-      transform: translateX(4px);
-    }
-  </style>
 </head>
 <body>
-  <div class="landing">
-    <h1>KATECHON<br>TECHNOLOGY</h1>
-    <div class="subtitle">REAL-TIME CONTENT GENERATION</div>
+
+  <!-- Mobile Gate -->
+  <div class="mobile-gate">
+    <div class="logo">KATECHON TECHNOLOGY</div>
+    <div class="msg">Our pitch deck works best on desktop</div>
+    <div class="sub">Please visit on a laptop or desktop browser</div>
   </div>
+
+  <!-- Start Overlay -->
+  <div id="start-overlay">
+    <div class="overlay-prompt">Press <kbd>Space</kbd> to begin</div>
+  </div>
+
+  <!-- Deck shell — slides are injected here by deck.js -->
+  <div class="deck" id="deck-content"></div>
+
+  <!-- Avatar Pet Mode -->
+  <iframe id="avatar-pet"
+    src="/avatar-pet.html"
+    allow="autoplay"
+    style="position:fixed;bottom:0;right:-250px;width:950px;height:100vh;border:none;background:transparent;z-index:200;pointer-events:none;"
+  ></iframe>
+
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+
+  <div class="nav">
+    <button id="prev">&#8249;</button>
+    <button id="next">&#8250;</button>
+  </div>
+
+  <div class="nav nav-left">
+    <button id="avatar-toggle" title="Toggle avatar & voice">&#9787;</button>
+    <button id="music-toggle" title="Toggle music">&#9834;</button>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

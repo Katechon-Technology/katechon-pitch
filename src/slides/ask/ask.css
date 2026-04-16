@@ -1,0 +1,51 @@
+.slide-ask {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 50%, rgba(224,74,47,0.12) 0%, var(--bg) 55%);
+  overflow: hidden;
+}
+.slide-ask .ask-hero {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(7rem, 18vw, 16rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+.slide-ask .ask-hero .accent {
+  background: linear-gradient(135deg, var(--accent) 0%, #ff8a65 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.slide-ask .ask-tagline {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: rgba(255,255,255,0.7);
+  margin-top: 3.5rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+.slide-ask .ask-milestones {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 4rem;
+  justify-content: center;
+}
+.slide-ask .ask-milestone {
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.slide-ask .ask-milestone .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-right: 0.6rem;
+  vertical-align: middle;
+  box-shadow: 0 0 8px var(--accent-glow);
+}

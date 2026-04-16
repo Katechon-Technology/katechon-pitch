@@ -1,5 +1,7 @@
 .vercel
 .env*.local
+node_modules/
+dist/
 
 # Ignore large/unnecessary binary files in libs
 libs/*

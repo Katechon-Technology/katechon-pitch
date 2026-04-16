@@ -1,0 +1,27 @@
+.slide-genmedia { text-align: center; }
+.slide-genmedia .label { margin-bottom: 2rem; }
+.slide-genmedia h2 {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  margin-bottom: 4rem;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.slide-genmedia .genmedia-traits {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.slide-genmedia .trait-pill {
+  padding: 1.2rem 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: var(--text-muted);
+  background: var(--bg-card);
+}
+.slide-genmedia .trait-pill strong { color: var(--text); font-weight: 700; }

@@ -1,0 +1,35 @@
+.slide-compare { align-items: center; }
+
+.slide-compare .compare-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  width: 70%;
+  max-width: 680px;
+}
+.slide-compare .compare-col {
+  padding: 2.5rem 2.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.slide-compare .compare-col h2 {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+}
+.slide-compare .compare-col .trait {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+}
+.slide-compare .compare-col .trait:last-child { border-bottom: none; }
+.slide-compare .compare-col .trait .lbl { color: var(--text-muted); }
+
+@media (max-width: 768px) {
+  .slide-compare .compare-grid { grid-template-columns: 1fr; width: 95%; gap: 1.5rem; }
+  .slide-compare .compare-col { padding: 2.5rem 2rem; }
+}

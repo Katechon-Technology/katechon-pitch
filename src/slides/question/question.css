@@ -1,0 +1,25 @@
+.slide-question {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 40%, var(--accent-soft) 0%, var(--bg) 65%);
+}
+.slide-question .question {
+  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.35;
+  max-width: 85%;
+}
+.slide-question .answer {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: var(--accent);
+  margin-top: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  padding: 1rem 2.5rem;
+  border: 1px solid rgba(224, 74, 47, 0.3);
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+
+@media (max-width: 768px) {
+  .slide-question .question { max-width: 95%; }
+}

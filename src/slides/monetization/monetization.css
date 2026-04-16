@@ -1,0 +1,32 @@
+.slide-monetization { align-items: center; }
+.slide-monetization .label { margin-bottom: 4rem; }
+
+.slide-monetization .grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  width: 90%;
+  max-width: 1200px;
+}
+.slide-monetization .grid-3 .card {
+  padding: 3rem 2.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border-top: 3px solid var(--accent);
+}
+.slide-monetization .grid-3 h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.slide-monetization .grid-3 p {
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .slide-monetization .grid-3 { grid-template-columns: 1fr; width: 95%; gap: 1.5rem; }
+  .slide-monetization .grid-3 .card { padding: 2rem 1.5rem; }
+}

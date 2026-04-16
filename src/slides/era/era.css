@@ -1,0 +1,45 @@
+.slide-era { text-align: left; align-items: flex-start; padding: 8vh 10vw; }
+
+.slide-era .eras {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  max-width: 900px;
+}
+.slide-era .era-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.slide-era .era-marker {
+  width: 4px;
+  height: 100%;
+  min-height: 3rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.slide-era .era-past .era-marker { background: var(--text-dim); }
+.slide-era .era-now .era-marker { background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.slide-era .era-row .era-label {
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  width: 5rem;
+  flex-shrink: 0;
+}
+.slide-era .era-now .era-label { color: var(--accent); }
+.slide-era .era-row .era-text {
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.slide-era .era-now .era-text { color: var(--text); font-weight: 700; }
+.slide-era .era-now .era-text .highlight { color: var(--accent); }
+
+@media (max-width: 768px) {
+  .slide-era { padding: 8vh 5vw 18vh; }
+  .slide-era .era-row { gap: 1rem; }
+}
