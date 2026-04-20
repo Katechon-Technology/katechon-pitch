@@ -64,6 +64,7 @@ async function loadModel() {
   let analyserData = null;
   let currentSource = null;
   let currentMouth = 0;
+  let playGen = 0; // invalidates in-flight decodeAudioData callbacks after a stop/switch
   const RMS_GAIN = 1.5; // boost factor (matches claudetorio's Math.min(1, rms * 1.5))
 
   function getRms() {
@@ -98,6 +99,7 @@ async function loadModel() {
   }
 
   function stopAudio() {
+    playGen++;
     if (currentSource) {
       try { currentSource.stop(); } catch (e) {}
       currentSource = null;
@@ -110,12 +112,14 @@ async function loadModel() {
     if (!payload.audio) return;
 
     ensureAudioCtx();
+    const myGen = playGen;
 
     const raw = atob(payload.audio);
     const buf = new Uint8Array(raw.length);
     for (let i = 0; i < raw.length; i++) buf[i] = raw.charCodeAt(i);
 
     audioCtx.decodeAudioData(buf.buffer).then(audioBuffer => {
+      if (myGen !== playGen) return; // a stop/switch happened while decoding — discard
       const source = audioCtx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(analyser); // route through analyser → destination
