@@ -19,8 +19,10 @@ export function initDeck(slideModules) {
   _mountedEls = mountSlides(slideModules);
 
   _avatarIframe = document.getElementById('avatar-pet');
+  // Use visibility (not display:none) so the iframe keeps its layout box and
+  // avatar-pet.html's PIXI init sees a real window.innerHeight.
   const first = _slides[0];
-  if (first.isVideoSlide || first.hideAvatar) _avatarIframe.style.display = 'none';
+  if (first.isVideoSlide || first.hideAvatar) _avatarIframe.style.visibility = 'hidden';
 
   document.getElementById('total').textContent = _total;
   document.getElementById('current').textContent = '1';
@@ -108,9 +110,9 @@ export function goTo(n) {
 
   const slide = _slides[_current];
   if (slide.isVideoSlide || slide.hideAvatar) {
-    _avatarIframe.style.display = 'none';
+    _avatarIframe.style.visibility = 'hidden';
   } else {
-    _avatarIframe.style.display = _avatarVisible ? '' : 'none';
+    _avatarIframe.style.visibility = _avatarVisible ? 'visible' : 'hidden';
     if (_avatarVisible) playNarration(slide);
   }
 
@@ -136,6 +138,7 @@ function initOverlay() {
   document.addEventListener('keydown', (e) => {
     if (e.key === ' ' && !_deckStarted) {
       e.preventDefault();
+      e.stopImmediatePropagation(); // keep the control-keydown listener from also advancing
       dismiss();
     }
   });
@@ -146,11 +149,13 @@ function initControls() {
 
   avatarToggleBtn.addEventListener('click', () => {
     _avatarVisible = !_avatarVisible;
-    _avatarIframe.style.display = _avatarVisible ? '' : 'none';
+    const slide = _slides[_current];
+    const forceHidden = slide.isVideoSlide || slide.hideAvatar;
+    _avatarIframe.style.visibility = (_avatarVisible && !forceHidden) ? 'visible' : 'hidden';
     avatarToggleBtn.style.opacity = _avatarVisible ? '1' : '0.6';
     avatarToggleBtn.textContent = _avatarVisible ? 'Mute' : 'Unmute';
     if (!_avatarVisible) stopNarration();
-    else playNarration(_slides[_current]);
+    else if (!forceHidden) playNarration(slide);
   });
 
   document.getElementById('prev').addEventListener('click', () => goTo(_current - 1));
@@ -198,9 +203,9 @@ function initMobileScrollTracking() {
 
       const slide = _slides[_current];
       if (slide.isVideoSlide || slide.hideAvatar) {
-        _avatarIframe.style.display = 'none';
+        _avatarIframe.style.visibility = 'hidden';
       } else {
-        _avatarIframe.style.display = _avatarVisible ? '' : 'none';
+        _avatarIframe.style.visibility = _avatarVisible ? 'visible' : 'hidden';
         if (_avatarVisible) playNarration(slide);
       }
 
