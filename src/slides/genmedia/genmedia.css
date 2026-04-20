@@ -1,27 +1,18 @@
-.slide-genmedia { text-align: center; }
-.slide-genmedia .label { margin-bottom: 2rem; }
-.slide-genmedia h2 {
-  font-size: clamp(3rem, 6vw, 5.5rem);
+.slide-genmedia {
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 50%, var(--accent-soft) 0%, var(--bg) 60%);
+}
+.slide-genmedia .genmedia-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(5rem, 16vw, 14rem);
   font-weight: 900;
   letter-spacing: 0.03em;
-  margin-bottom: 4rem;
-  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 0.95;
+  color: var(--accent);
+  text-shadow: 0 0 60px var(--accent-glow);
 }
-.slide-genmedia .genmedia-traits {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
+.slide-genmedia .genmedia-word span {
+  display: block;
 }
-.slide-genmedia .trait-pill {
-  padding: 1.2rem 2.5rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  color: var(--text-muted);
-  background: var(--bg-card);
-}
-.slide-genmedia .trait-pill strong { color: var(--text); font-weight: 700; }

@@ -3,7 +3,7 @@ import css  from './genmedia.css?inline'
 
 export default {
   id:        'genmedia',
-  narration: `The answer is generative media — high content volume, multi-channel distribution, and variable trust that can be calibrated to the use case.`,
+  narration: `Generative AI and the open rails of the blockchain make the next medium possible — channels aware of context, generated on demand, wired to execute. Consumption and action collapse into a single surface.`,
   html,
   css,
 }

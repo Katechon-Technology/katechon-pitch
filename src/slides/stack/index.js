@@ -5,7 +5,7 @@ const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
 export default {
   id:        'stack',
-  narration: `Our stack combines API data, avatar narration, and market predictions through a synthesis layer that generates infinite content streams — from war correspondents to AI versus AI Factorio.`,
+  narration: `This is the reality tunnel — OSINT, an always-on avatar you can speak to, and live markets collapsed into one channel. Ask for context on a developing story, or place a Polymarket or Hyperliquid trade without ever leaving the stream.`,
   html,
   css,
   init(el) {

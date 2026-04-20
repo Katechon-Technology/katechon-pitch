@@ -3,7 +3,8 @@ import css  from './closing.css?inline'
 
 export default {
   id:        'closing',
-  narration: `Katechon Technology. Let's talk.`,
+  hideAvatar: true,
+  narration: ``,
   html,
   css,
 }

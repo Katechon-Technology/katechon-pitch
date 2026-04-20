@@ -3,7 +3,7 @@ import css  from './vision.css?inline'
 
 export default {
   id:        'vision',
-  narration: `We are building a platform for infinite, customizable, and trusted content generation.`,
+  narration: `We are building the first reality tunnel — a platform where consumption and action are the same act. Watching becomes doing.`,
   html,
   css,
 }

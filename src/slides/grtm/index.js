@@ -32,5 +32,29 @@ export default {
     vid.addEventListener('volumechange', () => {
       unmute.classList.toggle('hidden', !vid.muted);
     });
+
+    // On slide activation: unmute, autoplay, and kill avatar narration.
+    const avatarIframe = document.getElementById('avatar-pet');
+    const stopAvatar = () => {
+      if (avatarIframe && avatarIframe.contentWindow) {
+        avatarIframe.contentWindow.postMessage({ type: 'stop' }, '*');
+      }
+    };
+
+    const observer = new MutationObserver(() => {
+      if (el.classList.contains('active')) {
+        stopAvatar();
+        vid.muted = false;
+        vid.play().catch(() => {
+          // Browser blocked unmuted autoplay — fall back to muted so the
+          // user can tap the unmute pill.
+          vid.muted = true;
+          vid.play().catch(() => {});
+        });
+      } else {
+        vid.pause();
+      }
+    });
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
   },
 }

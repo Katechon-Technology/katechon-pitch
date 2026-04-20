@@ -974,6 +974,160 @@
     }
 
     /* ═══════════════════════════════════════
+       SLIDE 14 — GRTM Seedance
+    ═══════════════════════════════════════ */
+    .slide-grtm {
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .slide-grtm::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,200,255,0.08) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grtm-frame {
+      position: relative;
+      height: 88vh;
+      aspect-ratio: 9 / 16;
+      flex-shrink: 0;
+      z-index: 1;
+      box-shadow:
+        0 0 0 1px rgba(0,200,255,0.5),
+        0 0 30px rgba(0,200,255,0.35),
+        0 0 80px rgba(0,200,255,0.18),
+        0 0 160px rgba(0,200,255,0.08);
+    }
+
+    .grtm-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .grtm-scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.04) 3px,
+        rgba(0,0,0,0.04) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .grtm-corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: rgba(0,200,255,0.9);
+      border-style: solid;
+      z-index: 3;
+    }
+    .grtm-corner.tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; animation: mc 2.4s ease-in-out infinite; }
+    .grtm-corner.tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; animation: mc 2.4s ease-in-out 0.6s infinite; }
+    .grtm-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; animation: mc 2.4s ease-in-out 1.2s infinite; }
+    .grtm-corner.br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; animation: mc 2.4s ease-in-out 1.8s infinite; }
+
+    .grtm-caption {
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.6rem;
+      max-width: 320px;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
+    }
+
+    .slide-grtm.active .grtm-caption {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .grtm-label {
+      font-size: clamp(0.65rem, 0.85vw, 0.95rem);
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: rgba(0,200,255,0.7);
+      text-transform: uppercase;
+    }
+
+    .grtm-headline {
+      font-size: clamp(1.6rem, 2.4vw, 2.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: 0.04em;
+    }
+
+    .grtm-subline {
+      font-size: clamp(0.85rem, 1.1vw, 1.15rem);
+      color: rgba(255,255,255,0.5);
+      line-height: 1.65;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Player internals ── */
+    .grtm-tap {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      cursor: pointer;
+    }
+
+    .grtm-unmute-pill {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(0,200,255,0.55);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.75rem;
+      font-family: inherit;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.3s;
+    }
+    .grtm-unmute-pill:hover { background: rgba(0,40,60,0.8); }
+    .grtm-unmute-pill.hidden { opacity: 0; pointer-events: none; }
+
+    .grtm-prog-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.2);
+      z-index: 5;
+    }
+    .grtm-prog-fill {
+      height: 100%;
+      background: rgba(0,200,255,0.85);
+      width: 0%;
+      transition: width 0.25s linear;
+    }
+
+    /* ═══════════════════════════════════════
        NAVIGATION
     ═══════════════════════════════════════ */
     .nav {
@@ -1537,6 +1691,44 @@
 
     </div>
 
+    <!-- 14: Narrative Schelling Point — AI GRTM -->
+    <div class="slide slide-grtm" data-slide="13">
+
+      <!-- Vertical social video frame -->
+      <div class="grtm-frame">
+        <div class="grtm-corner tl"></div>
+        <div class="grtm-corner tr"></div>
+        <div class="grtm-corner bl"></div>
+        <div class="grtm-corner br"></div>
+
+        <video id="seedance-video"
+               src="../assets/seedance-grtm.mp4"
+               playsinline
+               preload="auto"
+               autoplay
+               muted
+               loop></video>
+
+        <div class="grtm-scanlines"></div>
+
+        <!-- Tap to play/pause -->
+        <div class="grtm-tap" id="grtmTap"></div>
+
+        <!-- Unmute pill -->
+        <button class="grtm-unmute-pill" id="grtmUnmute">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          tap to unmute
+        </button>
+
+        <!-- Thin progress bar -->
+        <div class="grtm-prog-bar">
+          <div class="grtm-prog-fill" id="grtmProgFill"></div>
+        </div>
+      </div>
+
+
+    </div>
+
   </div>
 
   <!-- Avatar Pet Mode (2x size, cropped to top 1/3) -->
@@ -1556,7 +1748,7 @@
     allow="autoplay"
   ></iframe>
 
-  <div class="slide-counter"><span id="current">1</span> / <span id="total">13</span></div>
+  <div class="slide-counter"><span id="current">1</span> / <span id="total">14</span></div>
   <div class="nav">
     <button id="prev">&#8249;</button>
     <button id="next">&#8250;</button>
@@ -1635,8 +1827,8 @@
       pet.contentWindow.postMessage(payload, '*');
     }
 
-    // Slide index with the self-contained Simon Judd video
-    const VIDEO_SLIDE = 10;
+    // Slides with self-contained audio (pause deck music + hide avatar)
+    const VIDEO_SLIDES = new Set([10, 13]);
 
     function goTo(n) {
       if (n < 0 || n >= total) return;
@@ -1645,14 +1837,14 @@
       const vid = slides[current].querySelector('video');
       if (vid) vid.pause();
 
-      const wasVideoSlide = (current === VIDEO_SLIDE);
+      const wasVideoSlide = VIDEO_SLIDES.has(current);
       current = n;
 
       if (!isMobile) slides[current].classList.add('active');
       document.getElementById('current').textContent = current + 1;
       document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
 
-      if (current === VIDEO_SLIDE) {
+      if (VIDEO_SLIDES.has(current)) {
         // Kill deck audio + avatar — video is fully self-contained
         bgMusic.pause();
         avatarIframe.style.display = 'none';
@@ -1795,14 +1987,14 @@
           if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
             const idx = parseInt(entry.target.dataset.slide);
             if (!isNaN(idx) && idx !== current) {
-              const wasVideo = (current === VIDEO_SLIDE);
+              const wasVideo = VIDEO_SLIDES.has(current);
               stopNarration();
               const vid = slides[current].querySelector('video');
               if (vid) vid.pause();
               current = idx;
               document.getElementById('current').textContent = current + 1;
               document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
-              if (current === VIDEO_SLIDE) {
+              if (VIDEO_SLIDES.has(current)) {
                 bgMusic.pause();
                 avatarIframe.style.display = 'none';
               } else {
@@ -1893,6 +2085,37 @@
 
       layoutEvo();
     }
+
+    // ── GRTM video player ─────────────────────────────────────
+    (function () {
+      const vid      = document.getElementById('seedance-video');
+      const tap      = document.getElementById('grtmTap');
+      const unmute   = document.getElementById('grtmUnmute');
+      const progFill = document.getElementById('grtmProgFill');
+      if (!vid) return;
+
+      // Tap anywhere on video to toggle play/pause
+      tap.addEventListener('click', () => {
+        if (vid.paused) vid.play().catch(() => {});
+        else vid.pause();
+      });
+
+      // Unmute pill
+      unmute.addEventListener('click', (e) => {
+        e.stopPropagation();
+        vid.muted = false;
+        unmute.classList.add('hidden');
+      });
+
+      // Progress bar
+      vid.addEventListener('timeupdate', () => {
+        if (vid.duration) progFill.style.width = (vid.currentTime / vid.duration * 100) + '%';
+      });
+
+      vid.addEventListener('volumechange', () => {
+        unmute.classList.toggle('hidden', !vid.muted);
+      });
+    })();
   </script>
 </body>
 </html>

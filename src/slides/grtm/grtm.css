@@ -16,8 +16,8 @@
 
 .slide-grtm .grtm-frame {
   position: relative;
-  height: 88vh;
-  aspect-ratio: 9 / 16;
+  width: min(78vw, calc(74vh * 16 / 9));
+  aspect-ratio: 16 / 9;
   flex-shrink: 0;
   z-index: 1;
   box-shadow:

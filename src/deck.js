@@ -6,26 +6,21 @@ let _current = 0;
 let _total = 0;
 
 let _deckStarted = false;
-let _bgStarted = false;
-let _musicEnabled = true;
 let _avatarVisible = true;
 
 const _payloadCache = {};
-let _bgMusic = null;
 let _avatarIframe = null;
 
 export function initDeck(slideModules) {
   _slides = slideModules;
   _total = slideModules.length;
 
-  _bgMusic = new Audio('/assets/Cloud_Sync_2026-03-09T120527.mp3');
-  _bgMusic.loop = true;
-  _bgMusic.volume = 0.15;
-
   injectStyles(slideModules);
   _mountedEls = mountSlides(slideModules);
 
   _avatarIframe = document.getElementById('avatar-pet');
+  const first = _slides[0];
+  if (first.isVideoSlide || first.hideAvatar) _avatarIframe.style.display = 'none';
 
   document.getElementById('total').textContent = _total;
   document.getElementById('current').textContent = '1';
@@ -40,7 +35,7 @@ export function initDeck(slideModules) {
   }
 
   for (let i = 0; i < Math.min(3, _total); i++) {
-    loadPayload(_slides[i].id);
+    if (_slides[i].narration) loadPayload(_slides[i].id);
   }
 }
 
@@ -88,20 +83,13 @@ function stopNarration() {
   }
 }
 
-async function playNarration(slug) {
+async function playNarration(slide) {
   if (isMobile) return;
   if (!_avatarIframe || !_avatarIframe.contentWindow) return;
-  const payload = await loadPayload(slug);
+  if (!slide.narration) return;
+  const payload = await loadPayload(slide.id);
   if (!payload) return;
   _avatarIframe.contentWindow.postMessage(payload, '*');
-}
-
-function ensureBgMusic() {
-  if (isMobile) return;
-  if (!_bgStarted) {
-    _bgStarted = true;
-    _bgMusic.play().catch(() => {});
-  }
 }
 
 export function goTo(n) {
@@ -112,24 +100,18 @@ export function goTo(n) {
   const vid = _mountedEls[_current].querySelector('video');
   if (vid) vid.pause();
 
-  const wasVideoSlide = Boolean(_slides[_current].isVideoSlide);
   _current = n;
 
   if (!isMobile) _mountedEls[_current].classList.add('active');
   document.getElementById('current').textContent = _current + 1;
   document.getElementById('progress').style.width = ((_current + 1) / _total * 100) + '%';
 
-  if (_slides[_current].isVideoSlide) {
-    _bgMusic.pause();
+  const slide = _slides[_current];
+  if (slide.isVideoSlide || slide.hideAvatar) {
     _avatarIframe.style.display = 'none';
   } else {
-    if (wasVideoSlide) {
-      if (_musicEnabled) _bgMusic.play().catch(() => {});
-      _avatarIframe.style.display = _avatarVisible ? '' : 'none';
-    } else {
-      ensureBgMusic();
-    }
-    if (_avatarVisible) playNarration(_slides[_current].id);
+    _avatarIframe.style.display = _avatarVisible ? '' : 'none';
+    if (_avatarVisible) playNarration(slide);
   }
 
   const newVid = _mountedEls[_current].querySelector('video');
@@ -146,8 +128,7 @@ function initOverlay() {
     _deckStarted = true;
     overlay.style.opacity = '0';
     setTimeout(() => { overlay.style.display = 'none'; }, 400);
-    ensureBgMusic();
-    if (_avatarVisible) playNarration(_slides[0].id);
+    if (_avatarVisible) playNarration(_slides[0]);
   }
 
   overlay.addEventListener('click', dismiss);
@@ -162,21 +143,13 @@ function initOverlay() {
 
 function initControls() {
   const avatarToggleBtn = document.getElementById('avatar-toggle');
-  const musicToggleBtn  = document.getElementById('music-toggle');
 
   avatarToggleBtn.addEventListener('click', () => {
     _avatarVisible = !_avatarVisible;
     _avatarIframe.style.display = _avatarVisible ? '' : 'none';
     avatarToggleBtn.style.opacity = _avatarVisible ? '1' : '0.4';
     if (!_avatarVisible) stopNarration();
-    else playNarration(_slides[_current].id);
-  });
-
-  musicToggleBtn.addEventListener('click', () => {
-    _musicEnabled = !_musicEnabled;
-    musicToggleBtn.style.opacity = _musicEnabled ? '1' : '0.4';
-    if (_musicEnabled) _bgMusic.play().catch(() => {});
-    else _bgMusic.pause();
+    else playNarration(_slides[_current]);
   });
 
   document.getElementById('prev').addEventListener('click', () => goTo(_current - 1));
@@ -214,7 +187,6 @@ function initMobileScrollTracking() {
       const idx = parseInt(entry.target.dataset.slide);
       if (isNaN(idx) || idx === _current) return;
 
-      const wasVideo = Boolean(_slides[_current].isVideoSlide);
       stopNarration();
       const vid = _mountedEls[_current].querySelector('video');
       if (vid) vid.pause();
@@ -223,17 +195,12 @@ function initMobileScrollTracking() {
       document.getElementById('current').textContent = _current + 1;
       document.getElementById('progress').style.width = ((_current + 1) / _total * 100) + '%';
 
-      if (_slides[_current].isVideoSlide) {
-        _bgMusic.pause();
+      const slide = _slides[_current];
+      if (slide.isVideoSlide || slide.hideAvatar) {
         _avatarIframe.style.display = 'none';
       } else {
-        if (wasVideo) {
-          if (_musicEnabled) _bgMusic.play().catch(() => {});
-          _avatarIframe.style.display = _avatarVisible ? '' : 'none';
-        } else {
-          ensureBgMusic();
-        }
-        if (_avatarVisible) playNarration(_slides[_current].id);
+        _avatarIframe.style.display = _avatarVisible ? '' : 'none';
+        if (_avatarVisible) playNarration(slide);
       }
 
       const newVid = _mountedEls[_current].querySelector('video');

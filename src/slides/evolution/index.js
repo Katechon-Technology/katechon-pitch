@@ -3,7 +3,7 @@ import css  from './evolution.css?inline'
 
 export default {
   id:        'evolution',
-  narration: `Every medium has followed the same arc — from broadcast to digital to generative. Video, news, photography — each transformed by the same pattern. Generative is next.`,
+  narration: `Broadcast made us viewers, then social made us creators — each wave invisible from inside the one before. The third is forming now, and watching is about to become doing.`,
   html,
   css,
   init(el) {
