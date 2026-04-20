@@ -147,7 +147,8 @@ function initControls() {
   avatarToggleBtn.addEventListener('click', () => {
     _avatarVisible = !_avatarVisible;
     _avatarIframe.style.display = _avatarVisible ? '' : 'none';
-    avatarToggleBtn.style.opacity = _avatarVisible ? '1' : '0.4';
+    avatarToggleBtn.style.opacity = _avatarVisible ? '1' : '0.6';
+    avatarToggleBtn.textContent = _avatarVisible ? 'Mute' : 'Unmute';
     if (!_avatarVisible) stopNarration();
     else playNarration(_slides[_current]);
   });
