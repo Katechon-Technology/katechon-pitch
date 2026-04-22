@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <title>Katechon — Data Room</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #111111;
+      --bg-card: #161616;
+      --accent: #e04a2f;
+      --accent-glow: rgba(224, 74, 47, 0.15);
+      --accent-soft: rgba(224, 74, 47, 0.08);
+      --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --text-dim: #666666;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(224, 74, 47, 0.4);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 50% 0%, var(--accent-soft) 0%, transparent 55%),
+        var(--bg);
+      background-attachment: fixed;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding:
+        calc(4rem + env(safe-area-inset-top, 0px))
+        1.5rem
+        calc(3rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .wrap {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.35em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(3.2rem, 14vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1.0;
+      margin-top: 1.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 1.75rem;
+      letter-spacing: 0.3em;
+      font-weight: 300;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0 2rem;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      padding: 1.25rem 1.4rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      min-height: 76px;
+    }
+
+    .link:hover,
+    .link:focus-visible {
+      border-color: var(--border-hover);
+      background: rgba(224, 74, 47, 0.04);
+      box-shadow: 0 0 40px var(--accent-glow);
+      outline: none;
+    }
+
+    .link:active { transform: scale(0.99); }
+
+    .link .mark {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .link .body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .link .label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .link .desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .link .cta {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    .link:hover .cta,
+    .link:focus-visible .cta {
+      color: var(--accent);
+    }
+
+    .link .cta .arrow {
+      font-size: 1em;
+      transition: transform 0.25s ease;
+      display: inline-block;
+    }
+
+    .link:hover .cta .arrow,
+    .link:focus-visible .cta .arrow {
+      transform: translateX(3px);
+    }
+
+    footer {
+      margin-top: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover { color: var(--text-muted); }
+
+    /* ── Desktop refinements ── */
+    @media (min-width: 640px) {
+      body {
+        padding:
+          calc(6rem + env(safe-area-inset-top, 0px))
+          2rem
+          calc(4rem + env(safe-area-inset-bottom, 0px));
+      }
+      .link { padding: 1.4rem 1.6rem; }
+      .link .label { font-size: 1rem; }
+      .link .desc { font-size: 0.85rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="eyebrow">Katechon Technology</div>
+    <h1>DATA<br>ROOM</h1>
+    <div class="subtitle">Investor Access</div>
+
+    <div class="divider"></div>
+
+    <nav class="links" aria-label="Data room resources">
+      <a class="link" href="/deck/" target="_blank" rel="noopener">
+        <span class="mark" aria-hidden="true">✳</span>
+        <span class="body">
+          <span class="label">Deck</span>
+          <span class="desc">Full pitch presentation</span>
+        </span>
+        <span class="cta">Open <span class="arrow">→</span></span>
+      </a>
+
+      <a class="link" href="/pdf/" rel="noopener">
+        <span class="mark" aria-hidden="true">✳</span>
+        <span class="body">
+          <span class="label">One-Pager</span>
+          <span class="desc">Executive summary</span>
+        </span>
+        <span class="cta">Open <span class="arrow">→</span></span>
+      </a>
+
+      <a class="link" href="https://book.vimcal.com/p/simonjudde1d15/30-minute-meeting" target="_blank" rel="noopener">
+        <span class="mark" aria-hidden="true">✳</span>
+        <span class="body">
+          <span class="label">Book a Call</span>
+          <span class="desc">30 min with founders</span>
+        </span>
+        <span class="cta">Schedule <span class="arrow">→</span></span>
+      </a>
+
+      <a class="link" href="https://t.me/bigsky7" target="_blank" rel="noopener">
+        <span class="mark" aria-hidden="true">✳</span>
+        <span class="body">
+          <span class="label">Telegram</span>
+          <span class="desc">Chat directly with founders</span>
+        </span>
+        <span class="cta">Chat <span class="arrow">→</span></span>
+      </a>
+    </nav>
+
+    <footer>
+      <span>© 2026</span>
+      <a href="/">Home</a>
+    </footer>
+  </main>
+</body>
+</html>

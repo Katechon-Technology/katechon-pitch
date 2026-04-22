@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         deck: resolve(__dirname, 'deck/index.html'),
+        data: resolve(__dirname, 'data/index.html'),
       },
     },
   },
