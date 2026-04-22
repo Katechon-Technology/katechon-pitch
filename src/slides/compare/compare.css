@@ -14,7 +14,7 @@
   background: var(--bg-card);
 }
 .slide-compare .compare-col h2 {
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-size: clamp(1.6rem, 2.5cqw, 2.2rem);
   font-weight: 800;
   margin-bottom: 2.5rem;
 }
@@ -24,7 +24,7 @@
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid var(--border);
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: clamp(1rem, 1.4cqw, 1.2rem);
 }
 .slide-compare .compare-col .trait:last-child { border-bottom: none; }
 .slide-compare .compare-col .trait .lbl { color: var(--text-muted); }

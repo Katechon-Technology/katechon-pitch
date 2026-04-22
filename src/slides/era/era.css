@@ -1,4 +1,4 @@
-.slide-era { text-align: left; align-items: flex-start; padding: 8vh 10vw; }
+.slide-era { text-align: left; align-items: flex-start; padding: 8cqh 10cqw; }
 
 .slide-era .eras {
   display: flex;
@@ -22,7 +22,7 @@
 .slide-era .era-past .era-marker { background: var(--text-dim); }
 .slide-era .era-now .era-marker { background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
 .slide-era .era-row .era-label {
-  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  font-size: clamp(0.7rem, 1cqw, 0.8rem);
   color: var(--text-dim);
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -31,7 +31,7 @@
 }
 .slide-era .era-now .era-label { color: var(--accent); }
 .slide-era .era-row .era-text {
-  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.2rem, 2.2cqw, 1.8rem);
   font-weight: 500;
   color: var(--text-muted);
   line-height: 1.5;

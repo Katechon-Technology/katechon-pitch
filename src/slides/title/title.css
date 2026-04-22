@@ -1,10 +1,10 @@
 .slide-title {
   text-align: center;
   background: radial-gradient(ellipse at 50% 58%, var(--accent-soft) 0%, var(--bg) 70%);
-  gap: clamp(4rem, 9vh, 8rem);
+  gap: clamp(4rem, 9cqh, 8rem);
 }
 .slide-title h1 {
-  font-size: clamp(4rem, 9vw, 8rem);
+  font-size: clamp(4rem, 9cqw, 8rem);
   font-weight: 900;
   letter-spacing: 0.12em;
   line-height: 1.05;
@@ -15,7 +15,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55em;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-size: clamp(1.6rem, 3cqw, 2.6rem);
   color: var(--text);
   letter-spacing: 0.02em;
   font-weight: 300;

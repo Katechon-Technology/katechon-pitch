@@ -28,7 +28,7 @@
   box-shadow: 0 0 30px var(--accent-soft);
 }
 .slide-stack .stack-box h3 {
-  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.1rem, 1.8cqw, 1.5rem);
   font-weight: 700;
 }
 .slide-stack .stack-arrow {

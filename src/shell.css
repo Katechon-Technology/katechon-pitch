@@ -12,6 +12,9 @@
   --text-muted: #aaaaaa;
   --text-dim: #555555;
   --border: rgba(255,255,255,0.08);
+
+  /* Set by deck.js on load + resize. min(innerW/1440, innerH/900). */
+  --stage-scale: 1;
 }
 
 html, body {
@@ -22,7 +25,27 @@ html, body {
   overflow: hidden;
 }
 
-.deck { width: 100vw; height: 100vh; position: relative; }
+body { position: relative; }
+
+/* ── Stage ──
+   Fixed 1440×900 design canvas. Everything that belongs to the deck lives
+   inside it (slides, avatar, nav, counter, progress). A uniform transform
+   scales the whole thing to fit the window, so proportions are locked and
+   the avatar never drifts out of frame on larger monitors.
+   container-type: size makes cqw/cqh inside resolve to the stage, so slide
+   CSS that uses cqw/cqh stays pixel-deterministic across displays. */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1440px;
+  height: 900px;
+  transform: translate(-50%, -50%) scale(var(--stage-scale, 1));
+  transform-origin: center center;
+  container-type: size;
+}
+
+.deck { width: 100%; height: 100%; position: relative; }
 
 .slide {
   position: absolute;
@@ -31,7 +54,7 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 5vh 6vw;
+  padding: 5cqh 6cqw;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
@@ -40,7 +63,7 @@ html, body {
 .slide.active { opacity: 1; pointer-events: auto; }
 
 .label {
-  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  font-size: clamp(0.75rem, 1.1cqw, 0.9rem);
   color: var(--accent);
   letter-spacing: 0.35em;
   font-weight: 600;
@@ -55,7 +78,7 @@ html, body {
 
 /* ── Navigation ── */
 .nav {
-  position: fixed;
+  position: absolute;
   top: 2rem;
   right: 2.5rem;
   display: flex;
@@ -92,7 +115,7 @@ html, body {
 
 /* ── Progress bar ── */
 .progress {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   height: 3px;
@@ -102,7 +125,7 @@ html, body {
 
 /* ── Slide counter ── */
 .slide-counter {
-  position: fixed;
+  position: absolute;
   bottom: 2.7rem;
   left: 2.5rem;
   font-size: 0.8rem;
@@ -111,20 +134,25 @@ html, body {
   z-index: 100;
 }
 
-/* ── Avatar iframe ── */
+/* ── Avatar iframe ──
+   Fixed in stage coordinates. Height matches stage height; the canvas inside
+   the iframe is a fixed 950×900 (see avatar-pet.html), so the model's
+   position is deterministic and doesn't depend on window.innerHeight. */
 #avatar-pet {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   right: -250px;
   width: 950px;
-  height: 100vh;
+  height: 100%;
   border: none;
   background: transparent;
   z-index: 200;
   pointer-events: none;
 }
 
-/* ── Start overlay ── */
+/* ── Start overlay ──
+   Lives outside .stage so it covers the full window (including letterbox
+   bars on monitors that don't match the stage aspect ratio). */
 #start-overlay {
   position: fixed;
   inset: 0;
@@ -186,7 +214,7 @@ html, body {
   pointer-events: none;
 }
 .stream-arc-item h3 {
-  font-size: clamp(0.75rem, 1.1vw, 0.9rem);
+  font-size: clamp(0.75rem, 1.1cqw, 0.9rem);
   font-weight: 500;
   color: var(--text-dim);
   transition: all 0.4s ease;
@@ -200,15 +228,27 @@ html, body {
 .stream-arc-item.active h3 {
   color: var(--text);
   font-weight: 700;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: clamp(1rem, 1.5cqw, 1.25rem);
 }
 
 /* ── Mobile gate ── */
 .mobile-gate { display: none; }
 
-/* ── Mobile layout ── */
+/* ── Mobile layout ──
+   On mobile, the stage stops being a fixed-size canvas and reverts to a
+   normal flow block. container-type is removed so cqw/cqh inside slide
+   CSS falls back to the small viewport (effectively svw/svh — close
+   enough to the old vw/vh behaviour). */
 @media (max-width: 768px) {
   html, body { overflow: visible; height: auto; }
+
+  .stage {
+    position: static;
+    width: 100%;
+    height: auto;
+    transform: none;
+    container-type: normal;
+  }
 
   .deck {
     width: 100%;
@@ -269,7 +309,7 @@ html, body {
     font-size: 0.75rem;
   }
 
-  .progress { z-index: 300; }
+  .progress { z-index: 300; position: fixed; }
 
   #avatar-pet { display: none !important; }
 

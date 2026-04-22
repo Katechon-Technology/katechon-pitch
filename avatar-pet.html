@@ -21,8 +21,12 @@ if (typeof PIXI === 'undefined' || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
 } else {
 
 const MODEL_URL = '/live2d-models/mao_pro/runtime/mao_pro.model3.json';
+// Fixed canvas size — the iframe is sized inside the deck's .stage (1440×900)
+// at width:950, height:100%, so these match the rendered CSS box. Because
+// the stage is scaled uniformly by the parent deck, keeping these constants
+// means the avatar's position is identical on every monitor.
 const W = 950;
-const H = window.innerHeight;
+const H = 900;
 
 const app = new PIXI.Application({
   view: document.getElementById('avatar-canvas'),
@@ -44,7 +48,11 @@ async function loadModel() {
   model.scale.set(scale);
   model.anchor.set(0.5, 0.5);
   model.x = W / 2;
-  model.y = H * 1.35;
+  // Previously H * 1.35 against a viewport-height canvas, which drifted
+  // off-screen on tall monitors. With H fixed at 900, pin the model
+  // ~280px below the canvas bottom so the head/shoulders sit at the
+  // same visual height as on a 14" screen.
+  model.y = 1180;
 
   try {
     model.motion('Idle', 0, PIXI.live2d.MotionPriority.IDLE);

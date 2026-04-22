@@ -3,13 +3,13 @@
   background: radial-gradient(ellipse at 50% 40%, var(--accent-soft) 0%, var(--bg) 65%);
 }
 .slide-question .question {
-  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  font-size: clamp(2rem, 4.5cqw, 3.6rem);
   font-weight: 700;
   line-height: 1.35;
   max-width: 85%;
 }
 .slide-question .answer {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-size: clamp(1.1rem, 2cqw, 1.5rem);
   color: var(--accent);
   margin-top: 4rem;
   font-weight: 700;

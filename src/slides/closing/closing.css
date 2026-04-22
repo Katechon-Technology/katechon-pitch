@@ -3,13 +3,13 @@
   background: radial-gradient(ellipse at 50% 60%, var(--accent-soft) 0%, var(--bg) 70%);
 }
 .slide-closing h1 {
-  font-size: clamp(4rem, 9vw, 8rem);
+  font-size: clamp(4rem, 9cqw, 8rem);
   font-weight: 900;
   letter-spacing: 0.12em;
   line-height: 1.05;
 }
 .slide-closing .closing-cta {
-  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.2rem, 2.2cqw, 1.8rem);
   color: var(--text-muted);
   margin-top: 2.5rem;
   font-weight: 300;
@@ -28,13 +28,13 @@
   gap: 0.75rem;
 }
 .slide-closing .qr-item img {
-  width: clamp(140px, 14vw, 200px);
-  height: clamp(140px, 14vw, 200px);
+  width: clamp(140px, 14cqw, 200px);
+  height: clamp(140px, 14cqw, 200px);
   border-radius: 12px;
   object-fit: cover;
 }
 .slide-closing .qr-item .qr-label {
-  font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+  font-size: clamp(0.7rem, 0.9cqw, 0.85rem);
   color: var(--text-dim);
   letter-spacing: 0.2em;
   font-weight: 500;

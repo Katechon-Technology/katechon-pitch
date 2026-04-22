@@ -5,7 +5,7 @@
 }
 .slide-ask .ask-hero {
   font-family: 'Anton', sans-serif;
-  font-size: clamp(7rem, 18vw, 16rem);
+  font-size: clamp(7rem, 18cqw, 16rem);
   line-height: 0.9;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -20,7 +20,7 @@
   background-clip: text;
 }
 .slide-ask .ask-tagline {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-size: clamp(1.1rem, 2cqw, 1.5rem);
   color: rgba(255,255,255,0.7);
   margin-top: 3.5rem;
   font-weight: 400;
@@ -33,7 +33,7 @@
   justify-content: center;
 }
 .slide-ask .ask-milestone {
-  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  font-size: clamp(0.75rem, 1cqw, 0.85rem);
   color: var(--text-dim);
   letter-spacing: 0.2em;
   text-transform: uppercase;

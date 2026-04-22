@@ -19,28 +19,30 @@
     <div class="overlay-prompt">Press <kbd>Space</kbd> to begin</div>
   </div>
 
-  <!-- Deck shell — slides are injected here by deck.js -->
-  <div class="deck" id="deck-content"></div>
+  <!-- Stage: fixed-size design canvas (1440x900) scaled uniformly to fit the window. -->
+  <div class="stage">
+    <!-- Deck shell — slides are injected here by deck.js -->
+    <div class="deck" id="deck-content"></div>
 
-  <!-- Avatar Pet Mode -->
-  <iframe id="avatar-pet"
-    src="/avatar-pet.html"
-    allow="autoplay"
-    style="position:fixed;bottom:0;right:-250px;width:950px;height:100vh;border:none;background:transparent;z-index:200;pointer-events:none;"
-  ></iframe>
+    <!-- Avatar Pet Mode -->
+    <iframe id="avatar-pet"
+      src="/avatar-pet.html"
+      allow="autoplay"
+    ></iframe>
 
-  <div class="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
+    <div class="slide-counter"><span id="current">1</span> / <span id="total">1</span></div>
 
-  <div class="nav">
-    <button id="prev">&#8249;</button>
-    <button id="next">&#8250;</button>
+    <div class="nav">
+      <button id="prev">&#8249;</button>
+      <button id="next">&#8250;</button>
+    </div>
+
+    <div class="nav nav-left">
+      <button id="avatar-toggle" title="Mute avatar and narration">Mute</button>
+    </div>
+
+    <div class="progress" id="progress"></div>
   </div>
-
-  <div class="nav nav-left">
-    <button id="avatar-toggle" title="Mute avatar and narration">Mute</button>
-  </div>
-
-  <div class="progress" id="progress"></div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

@@ -1,5 +1,10 @@
 const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+/* Stage design size — must match .stage { width; height } in shell.css.
+   Keep in sync if you change one. */
+const STAGE_W = 1440;
+const STAGE_H = 900;
+
 let _slides = [];
 let _mountedEls = [];
 let _current = 0;
@@ -34,6 +39,8 @@ export function initDeck(slideModules) {
   if (isMobile) {
     _mountedEls.forEach(el => el.classList.add('active'));
     initMobileScrollTracking();
+  } else {
+    initStageScale();
   }
 
   for (let i = 0; i < Math.min(3, _total); i++) {
@@ -184,6 +191,15 @@ function initControls() {
       if (Math.abs(dx) > 50) dx > 0 ? goTo(_current - 1) : goTo(_current + 1);
     });
   }
+}
+
+function initStageScale() {
+  function fit() {
+    const scale = Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+    document.documentElement.style.setProperty('--stage-scale', scale);
+  }
+  fit();
+  window.addEventListener('resize', fit);
 }
 
 function initMobileScrollTracking() {

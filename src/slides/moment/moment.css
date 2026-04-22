@@ -2,7 +2,7 @@
   background: #000;
   align-items: center;
   justify-content: center;
-  padding: 3vh 5vw;
+  padding: 3cqh 5cqw;
   overflow: hidden;
   --moment-glow: #7c4dff;
   --moment-glow-soft: rgba(124,77,255,0.55);
@@ -23,7 +23,7 @@
 
 .slide-moment .moment-frame {
   position: relative;
-  width: min(78vw, calc(74vh * 16 / 9));
+  width: min(78cqw, calc(74cqh * 16 / 9));
   aspect-ratio: 16 / 9;
   z-index: 1;
   box-shadow:

@@ -3,7 +3,7 @@
   background: radial-gradient(ellipse at 50% 50%, var(--accent-soft) 0%, var(--bg) 60%);
 }
 .slide-vision .vision-word {
-  font-size: clamp(6rem, 22vw, 20rem);
+  font-size: clamp(6rem, 22cqw, 20rem);
   font-weight: 900;
   letter-spacing: 0.05em;
   line-height: 1;

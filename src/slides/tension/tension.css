@@ -36,7 +36,7 @@
 
 .slide-tension .tscrn {
   position: absolute;
-  width: clamp(180px, 22vw, 340px);
+  width: clamp(180px, 22cqw, 340px);
   aspect-ratio: 16 / 10;
   border-radius: 6px;
   overflow: hidden;
@@ -201,7 +201,7 @@
   opacity: 1;
 }
 .slide-tension .outro-eyebrow {
-  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  font-size: clamp(0.75rem, 1cqw, 0.95rem);
   color: var(--accent);
   letter-spacing: 0.42em;
   font-weight: 700;
@@ -212,7 +212,7 @@
   transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
 }
 .slide-tension .outro-text {
-  font-size: clamp(2.2rem, 5.2vw, 4.4rem);
+  font-size: clamp(2.2rem, 5.2cqw, 4.4rem);
   font-weight: 800;
   letter-spacing: 0.01em;
   line-height: 1.1;

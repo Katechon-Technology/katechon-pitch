@@ -1,12 +1,12 @@
 .slide-video {
   justify-content: center;
   align-items: center;
-  padding: 3vh 4vw;
+  padding: 3cqh 4cqw;
   background: #0a0a0a;
 }
 .slide-video .label { margin-bottom: 2.5rem; }
 .slide-video .video-embed {
-  width: min(90%, calc(75vh * 16 / 9));
+  width: min(90%, calc(75cqh * 16 / 9));
   aspect-ratio: 16 / 9;
   border-radius: 12px;
   overflow: hidden;
