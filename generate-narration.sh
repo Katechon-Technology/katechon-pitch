@@ -4,8 +4,9 @@
 # Voice: jqcCZkN6Knx8BJ5TBdYR   Model: eleven_turbo_v2
 #
 # Usage:
-#   ./generate-narration.sh            # regenerate only missing
-#   ./generate-narration.sh --force    # regenerate everything
+#   ./generate-narration.sh                 # regenerate only missing
+#   ./generate-narration.sh --force         # regenerate everything
+#   ./generate-narration.sh --only <slug>   # regenerate just one slide (forced)
 
 set -euo pipefail
 
@@ -14,7 +15,15 @@ VOICE_ID="jqcCZkN6Knx8BJ5TBdYR"
 MODEL_ID="eleven_turbo_v2"
 OUT_DIR="assets/narration"
 FORCE=0
-[[ "${1:-}" == "--force" ]] && FORCE=1
+ONLY=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --force) FORCE=1; shift ;;
+    --only)  ONLY="${2:-}"; FORCE=1; shift 2 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
 
 mkdir -p "$OUT_DIR"
 
@@ -23,7 +32,7 @@ NARRATIONS=(
   "evolution|Broadcast made us viewers, then social made us creators — each wave invisible from inside the one before. The third is forming now, and watching is about to become doing."
   "tension|To act on a single headline today, you leave the stream — four apps, twelve clicks, and the world has already moved. The interface hasn't caught up to the world it shows you."
   "genmedia|Generative AI and the open rails of the blockchain make the next medium possible — channels aware of context, generated on demand, wired to execute. Consumption and action collapse into a single surface."
-  "stack|This is the reality tunnel — OSINT, an always-on avatar you can speak to, and live markets collapsed into one channel. Ask for context on a developing story, or place a Polymarket or Hyperliquid trade without ever leaving the stream."
+  "stack|Cheap simulation runs headless; high-fidelity rendering only spins up when a viewer tunes in. We're starting with a single open source, 24-hour interactive live stream — and the same architecture scales to thousands of channels."
   "vision|We are building the first reality tunnel — a platform where consumption and action are the same act. Watching becomes doing."
   "ask|We're starting with the traders and analysts who need this first — the reality tunnel comes for everyone else next. We're raising our seed round; get in."
 )
@@ -31,6 +40,11 @@ NARRATIONS=(
 for entry in "${NARRATIONS[@]}"; do
   SLUG="${entry%%|*}"
   TEXT="${entry#*|}"
+
+  if [[ -n "$ONLY" && "$SLUG" != "$ONLY" ]]; then
+    continue
+  fi
+
   TTS_FILE="$OUT_DIR/${SLUG}.tts.json"
   MP3_FILE="$OUT_DIR/${SLUG}.mp3"
 
