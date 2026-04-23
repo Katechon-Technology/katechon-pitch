@@ -6,13 +6,13 @@ import stack        from './stack/index.js'
 import howitworks   from './howitworks/index.js'
 import video        from './video/index.js'
 import ask          from './ask/index.js'
-import moment       from './moment/index.js'
+import finale       from './finale/index.js'
 import vision       from './vision/index.js'
 import closing      from './closing/index.js'
 import grtm         from './grtm/index.js'
 
 export default [
   title, grtm, evolution, tension,
-  genmedia, video, stack, howitworks, moment,
-  vision, ask, closing,
+  genmedia, video, stack, howitworks,
+  vision, ask, finale, closing,
 ]
