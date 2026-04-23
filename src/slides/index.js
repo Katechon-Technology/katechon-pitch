@@ -3,6 +3,7 @@ import evolution    from './evolution/index.js'
 import tension      from './tension/index.js'
 import genmedia     from './genmedia/index.js'
 import stack        from './stack/index.js'
+import howitworks   from './howitworks/index.js'
 import video        from './video/index.js'
 import ask          from './ask/index.js'
 import moment       from './moment/index.js'
@@ -12,6 +13,6 @@ import grtm         from './grtm/index.js'
 
 export default [
   title, grtm, evolution, tension,
-  genmedia, video, stack, moment,
+  genmedia, video, stack, howitworks, moment,
   vision, ask, closing,
 ]

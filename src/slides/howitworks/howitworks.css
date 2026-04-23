@@ -1,0 +1,226 @@
+.slide-howitworks {
+  padding: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+.slide-howitworks .hiw-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-howitworks .hiw-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+}
+
+.slide-howitworks .hiw-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+.slide-howitworks[data-modal-active="true"] .hiw-dim { opacity: 1; }
+
+.slide-howitworks .hiw-hotspot {
+  position: absolute;
+  border: 1px dashed rgba(255,255,255,0);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  z-index: 4;
+  padding: 0;
+}
+.slide-howitworks .hiw-hotspot:hover,
+.slide-howitworks .hiw-hotspot:focus-visible {
+  border-color: rgba(139, 233, 253, 0.75);
+  background: rgba(139, 233, 253, 0.06);
+  box-shadow: 0 0 24px rgba(139, 233, 253, 0.35), inset 0 0 24px rgba(139, 233, 253, 0.15);
+  outline: none;
+}
+.slide-howitworks[data-modal-active="true"] .hiw-hotspot {
+  pointer-events: none;
+  opacity: 0;
+}
+/* The hotspot for the active modal stays lit so it's clear which region
+   the modal is describing. */
+.slide-howitworks .hiw-hotspot.active {
+  opacity: 1 !important;
+  border: 2px solid rgba(139, 233, 253, 0.95);
+  background: rgba(139, 233, 253, 0.08);
+  box-shadow:
+    0 0 28px rgba(139, 233, 253, 0.55),
+    inset 0 0 28px rgba(139, 233, 253, 0.18);
+}
+.slide-howitworks .hiw-hotspot.active::after {
+  content: attr(data-label);
+  position: absolute;
+  top: -2.1em;
+  left: 0;
+  padding: 0.25em 0.7em;
+  background: rgba(10, 14, 22, 0.92);
+  border: 1px solid rgba(139, 233, 253, 0.7);
+  color: #8be9fd;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(0.65rem, 0.9cqw, 0.8rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 18px rgba(139, 233, 253, 0.35);
+}
+
+/* Hotspots positioned as % of the full stage. Video is object-fit:cover so
+   edges may be clipped at extreme aspect ratios, but 16:10 stage vs 16:9
+   video only crops ~5% horizontally. */
+.slide-howitworks .hiw-zone-dashboard {
+  left: 2%;  top: 9%;  width: 63%; height: 82%;
+}
+.slide-howitworks .hiw-zone-avatar {
+  left: 72%; top: 35%; width: 26%; height: 60%;
+}
+.slide-howitworks .hiw-zone-markets {
+  left: 2%;  top: 62%; width: 23%; height: 34%;
+}
+
+.slide-howitworks .hiw-modal {
+  position: absolute;
+  width: min(36%, 520px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(.2,.8,.2,1);
+  z-index: 10;
+}
+.slide-howitworks .hiw-modal.active { opacity: 1; pointer-events: auto; }
+
+/* Each modal lives adjacent to its zone so the viewer reads the pairing
+   spatially. Values tuned to the 1440x900 stage and hotspot rectangles. */
+.slide-howitworks .hiw-modal[data-modal="0"] {
+  right: 4%; top: 50%;
+  transform: translateY(-46%) scale(0.97);
+}
+.slide-howitworks .hiw-modal[data-modal="0"].active {
+  transform: translateY(-50%) scale(1);
+}
+.slide-howitworks .hiw-modal[data-modal="1"] {
+  left: 4%; top: 50%;
+  transform: translateY(-46%) scale(0.97);
+}
+.slide-howitworks .hiw-modal[data-modal="1"].active {
+  transform: translateY(-50%) scale(1);
+}
+.slide-howitworks .hiw-modal[data-modal="2"] {
+  right: 4%; top: 6%;
+  transform: translateY(-4%) scale(0.97);
+}
+.slide-howitworks .hiw-modal[data-modal="2"].active {
+  transform: translateY(0) scale(1);
+}
+
+/* A small cyan arrow on the edge of the modal card pointing back toward
+   its zone — reinforces the pairing. */
+.slide-howitworks .hiw-modal-card { position: relative; }
+.slide-howitworks .hiw-modal[data-modal="0"] .hiw-modal-card::before,
+.slide-howitworks .hiw-modal[data-modal="1"] .hiw-modal-card::before,
+.slide-howitworks .hiw-modal[data-modal="2"] .hiw-modal-card::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  filter: drop-shadow(0 0 4px rgba(139, 233, 253, 0.6));
+}
+.slide-howitworks .hiw-modal[data-modal="0"] .hiw-modal-card::before {
+  /* arrow points left → toward the dashboard zone on the left */
+  left: -20px; top: 50%; margin-top: -10px;
+  border-right-color: rgba(139, 233, 253, 0.8);
+}
+.slide-howitworks .hiw-modal[data-modal="1"] .hiw-modal-card::before {
+  /* arrow points right → toward the avatar zone on the right */
+  right: -20px; top: 50%; margin-top: -10px;
+  border-left-color: rgba(139, 233, 253, 0.8);
+}
+.slide-howitworks .hiw-modal[data-modal="2"] .hiw-modal-card::before {
+  /* arrow points down-left → toward the markets zone in the bottom-left */
+  left: -20px; bottom: 24px;
+  border-right-color: rgba(139, 233, 253, 0.8);
+}
+
+.slide-howitworks .hiw-modal-card {
+  background: rgba(10, 14, 22, 0.92);
+  border: 1px solid rgba(139, 233, 253, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(139, 233, 253, 0.15),
+    0 20px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(139, 233, 253, 0.18);
+  backdrop-filter: blur(8px);
+  padding: 2.4cqh 3.2cqw;
+  color: #e8f4ff;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+.slide-howitworks .hiw-modal-eyebrow {
+  font-size: clamp(0.7rem, 1.05cqw, 0.95rem);
+  color: #8be9fd;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 1cqh;
+  font-weight: 600;
+}
+
+.slide-howitworks .hiw-modal-title {
+  font-family: 'Chakra Petch', ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.6rem, 2.8cqw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 1.6cqh;
+  color: #ffffff;
+  text-shadow: 0 0 28px rgba(139, 233, 253, 0.35);
+}
+
+.slide-howitworks .hiw-modal-body {
+  font-size: clamp(0.95rem, 1.35cqw, 1.1rem);
+  line-height: 1.6;
+  color: rgba(232, 244, 255, 0.88);
+}
+
+.slide-howitworks .hiw-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 2.4cqh;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(0.65rem, 0.95cqw, 0.8rem);
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  z-index: 6;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.slide-howitworks[data-modal-active="true"] .hiw-hint { opacity: 0.35; }
+
+.slide-howitworks .hiw-hint-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7em;
+  height: 1.7em;
+  padding: 0 0.4em;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+}
