@@ -33,8 +33,8 @@ NARRATIONS=(
   "tension|To act on a single headline today, you leave the stream — four apps, twelve clicks, and the world has already moved. The interface hasn't caught up to the world it shows you."
   "genmedia|Generative AI and the open rails of the blockchain make the next medium possible — channels aware of context, generated on demand, wired to execute. Consumption and action collapse into a single surface."
   "stack|Cheap simulation runs headless; high-fidelity rendering only spins up when a viewer tunes in. We're starting with a single open source, 24-hour interactive live stream — and the same architecture scales to thousands of channels."
-  "vision|We are building the first reality tunnel — a platform where consumption and action are the same act. Watching becomes doing."
-  "ask|We're starting with the traders and analysts who need this first — the reality tunnel comes for everyone else next. We're raising our seed round; get in."
+  "vision|We are building the first 24-hour interactive livestream — a platform where consumption and action are the same act. Watching becomes doing."
+  "ask|We're starting with the traders and analysts who need this first — the interactive livestream comes for everyone else next. We're raising our seed round; get in."
 )
 
 for entry in "${NARRATIONS[@]}"; do
