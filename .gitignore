@@ -11,3 +11,8 @@ libs/*
 # Only include the mao_pro model used by the avatar
 live2d-models/*
 !live2d-models/mao_pro/
+
+# LaTeX build artifacts
+pdf/*.aux
+pdf/*.log
+pdf/*.out

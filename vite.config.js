@@ -9,6 +9,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         deck: resolve(__dirname, 'deck/index.html'),
         data: resolve(__dirname, 'data/index.html'),
+        pdf:  resolve(__dirname, 'pdf/index.html'),
       },
     },
   },
