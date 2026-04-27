@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <title>Katechon — One-Pager</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #111; }
+    body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+    .bar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      background: #161616;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .bar-title {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    .bar-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .bar a {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #e04a2f;
+      text-decoration: none;
+    }
+
+    .bar a:hover { text-decoration: underline; }
+
+    embed {
+      flex: 1 1 auto;
+      width: 100%;
+      border: none;
+    }
+
+    .fallback {
+      flex: 1 1 auto;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: #aaa;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .fallback a {
+      color: #e04a2f;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <span class="bar-title">Katechon · One-Pager</span>
+    <div class="bar-actions">
+      <a href="/katechon.pdf" download>Download</a>
+      <a href="/data/">← Data Room</a>
+    </div>
+  </div>
+  <embed src="/katechon.pdf" type="application/pdf" title="Katechon One-Pager">
+  <div class="fallback" id="fallback">
+    <p>PDF preview unavailable in this browser.</p>
+    <a href="/katechon.pdf" download>Download One-Pager</a>
+  </div>
+  <script>
+    var e = document.querySelector('embed');
+    e.onerror = function() {
+      e.style.display = 'none';
+      document.getElementById('fallback').style.display = 'flex';
+    };
+  </script>
+</body>
+</html>
