@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talk to Katechon</title>
+  <link rel="stylesheet" href="/src/pitch/pitch.css">
+</head>
+<body>
+  <div class="pitch-stage">
+
+    <div class="pitch-hud">
+      <span class="pitch-brand">KATECHON</span>
+      <span class="pitch-status" id="pitchStatus">OFFLINE</span>
+    </div>
+
+    <div class="pitch-avatar-wrap" id="pitchAvatarWrap">
+      <iframe
+        id="pitchAvatar"
+        src="/avatar-pet.html?model=0&w=600"
+        allow="autoplay"
+        title="Mao"
+      ></iframe>
+      <div class="pitch-avatar-ring" id="pitchRing"></div>
+    </div>
+
+    <div class="pitch-transcript" id="pitchTranscript">
+      <div class="transcript-inner" id="transcriptInner"></div>
+    </div>
+
+    <div class="pitch-controls">
+      <button class="pitch-btn" id="pitchBtn">
+        <span class="btn-dot"></span>
+        <span class="btn-label" id="btnLabel">CONNECT</span>
+      </button>
+    </div>
+
+    <div class="pitch-footer">
+      <span>Ask anything — product, market, team, ask.</span>
+    </div>
+
+  </div>
+
+  <script type="module" src="/src/pitch/pitch.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0a;
+  --accent: #e04a2f;
+  --green: #00e87b;
+  --amber: #ffb020;
+  --blue: #4d9eff;
+  --text: #ffffff;
+  --muted: #888888;
+  --dim: #333333;
+  --border: rgba(255,255,255,0.08);
+  --font: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  overflow: hidden;
+}
+
+/* ── Stage ── */
+.pitch-stage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* ── HUD ── */
+.pitch-hud {
+  position: absolute;
+  top: 1.4rem;
+  left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.pitch-brand {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  font-weight: 700;
+  color: var(--green);
+  opacity: 0.8;
+}
+
+.pitch-status {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+.pitch-status[data-state="connecting"] { color: var(--amber); }
+.pitch-status[data-state="listening"]  { color: var(--blue); }
+.pitch-status[data-state="speaking"]   { color: var(--green); }
+.pitch-status[data-state="error"]      { color: var(--accent); }
+
+/* ── Avatar ── */
+.pitch-avatar-wrap {
+  position: relative;
+  width: min(600px, 70vw);
+  flex: 1;
+  min-height: 0;
+  margin-top: 3.5rem;
+}
+
+#pitchAvatar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+.pitch-avatar-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pitch-avatar-wrap[data-mode="speaking"] .pitch-avatar-ring {
+  border-color: rgba(0,232,123,0.6);
+  box-shadow: 0 0 32px rgba(0,232,123,0.2), 0 0 80px rgba(0,232,123,0.08);
+  animation: ringPulse 1.2s ease-in-out infinite;
+}
+.pitch-avatar-wrap[data-mode="listening"] .pitch-avatar-ring {
+  border-color: rgba(77,158,255,0.4);
+  box-shadow: 0 0 24px rgba(77,158,255,0.15);
+}
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1; }
+}
+
+/* ── Transcript ── */
+.pitch-transcript {
+  width: min(640px, 88vw);
+  height: 4.5rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 0.2rem;
+  mask-image: linear-gradient(to bottom, transparent, black 40%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%);
+}
+
+.transcript-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.transcript-line {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: lineIn 0.35s ease forwards;
+}
+.transcript-line.agent { color: var(--text); }
+.transcript-line.user  { color: var(--muted); }
+.transcript-line .tl-source {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  margin-right: 0.6rem;
+  opacity: 0.5;
+}
+.transcript-line.agent .tl-source { color: var(--green); opacity: 1; }
+.transcript-line.user  .tl-source { color: var(--blue);  opacity: 1; }
+
+@keyframes lineIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Controls ── */
+.pitch-controls {
+  flex-shrink: 0;
+  padding: 0.8rem 0 0;
+}
+
+.pitch-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 1.6rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.2s, border-color 0.2s;
+}
+.pitch-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+.pitch-btn.active {
+  color: var(--accent);
+  border-color: rgba(224,74,47,0.4);
+}
+
+.btn-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--dim);
+  transition: background 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.pitch-btn.connecting .btn-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); animation: dotPulse 0.8s ease-in-out infinite; }
+.pitch-btn.active     .btn-dot { background: var(--accent); box-shadow: 0 0 10px rgba(224,74,47,0.6); animation: dotPulse 1.4s ease-in-out infinite; }
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%       { transform: scale(1.4); opacity: 1; }
+}
+
+/* ── Footer ── */
+.pitch-footer {
+  flex-shrink: 0;
+  padding: 0.6rem 0 1.2rem;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
