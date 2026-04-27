@@ -1,0 +1,121 @@
+.slide-lineup {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+.slide-lineup .lineup-header {
+  flex-shrink: 0;
+  padding: 2.8cqh 2rem 1cqh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.slide-lineup .lineup-grid {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.4rem;
+  padding: 0 2.2rem 5cqh;
+  min-height: 0;
+  max-height: 72cqh;
+}
+
+.slide-lineup .lineup-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  cursor: pointer;
+}
+
+/* Avatar box */
+.slide-lineup .lineup-box {
+  flex: 1;
+  position: relative;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  background: #000;
+  min-height: 0;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.slide-lineup .lineup-col.active .lineup-box {
+  border-color: rgba(0,232,123,0.55);
+  box-shadow: 0 0 28px rgba(0,232,123,0.12), 0 0 60px rgba(0,232,123,0.06);
+}
+
+.slide-lineup .lineup-iframe {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 110%;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Name bar */
+.slide-lineup .lineup-name {
+  flex-shrink: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.72cqw, 0.64rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-dim);
+  padding: 0.5rem 0 0.4rem;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.slide-lineup .lineup-col.active .lineup-name {
+  color: var(--accent-green);
+  border-color: rgba(0,232,123,0.55);
+  border-top-color: transparent;
+}
+
+/* Hint */
+.slide-lineup .lineup-hint {
+  flex-shrink: 0;
+  padding: 0.9rem 0 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.slide-lineup .lineup-hint .lineup-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--text-dim);
+  border-radius: 3px;
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+
+/* Hide hint once a column is active */
+.slide-lineup[data-active] .lineup-hint {
+  opacity: 0;
+  pointer-events: none;
+}

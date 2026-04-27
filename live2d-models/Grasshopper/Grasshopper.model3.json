@@ -1,0 +1,27 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "Grasshopper.moc3",
+		"Textures": [
+			"Grasshopper.4096/texture_00.png",
+			"Grasshopper.4096/texture_01.png"
+		],
+		"Physics": "Grasshopper.physics3.json",
+		"DisplayInfo": "Grasshopper.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeROpen",
+				"ParamEyeLOpen"
+			]
+		}
+	]
+}

@@ -1,4 +1,5 @@
 .vercel
+.env
 .env*.local
 node_modules/
 dist/
@@ -11,6 +12,8 @@ libs/*
 # Only include the mao_pro model used by the avatar
 live2d-models/*
 !live2d-models/mao_pro/
+!live2d-models/Grasshopper/
+!live2d-models/zhongxingshekongdlc/
 
 # LaTeX build artifacts
 pdf/*.aux

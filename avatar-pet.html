@@ -20,12 +20,21 @@ if (typeof PIXI === 'undefined' || !PIXI.live2d || !PIXI.live2d.Live2DModel) {
   console.error('[avatar] PIXI or Live2D not loaded');
 } else {
 
-const MODEL_URL = '/live2d-models/mao_pro/runtime/mao_pro.model3.json';
+const MODELS = [
+  { name: 'Mao Pro',     url: '/live2d-models/mao_pro/runtime/mao_pro.model3.json',                       scale: 0.23,  yFactor: null,  lipParam: 'ParamA'          },
+  { name: 'Zhongxing',  url: '/live2d-models/zhongxingshekongdlc/zhongxingshekong.model3.json',           scale: 0.755, yFactor: 1.35,  lipParam: 'ParamMouthOpenY' },
+  { name: 'Grasshopper', url: '/live2d-models/Grasshopper/Grasshopper.model3.json',                       scale: 0.675, yFactor: 1.29,  lipParam: 'ParamMouthOpenY' },
+];
+
+const _p = new URLSearchParams(window.location.search);
+const _modelIdx = Math.min(parseInt(_p.get('model') || '0', 10), MODELS.length - 1);
+const _cfg = MODELS[_modelIdx];
+
 // Fixed canvas size — the iframe is sized inside the deck's .stage (1440×900)
 // at width:950, height:100%, so these match the rendered CSS box. Because
 // the stage is scaled uniformly by the parent deck, keeping these constants
 // means the avatar's position is identical on every monitor.
-const W = 950;
+const W = parseInt(_p.get('w') || '950', 10);
 const H = 900;
 
 const app = new PIXI.Application({
@@ -36,23 +45,30 @@ const app = new PIXI.Application({
   antialias: true,
 });
 
+let currentModel = null;
+let currentScale = _cfg.scale;
+let currentYFactor = _cfg.yFactor;
+
+function applyTransform(scale, yFactor) {
+  if (!currentModel) return;
+  currentScale = scale;
+  currentYFactor = yFactor;
+  currentModel.scale.set(scale);
+  currentModel.x = W / 2;
+  currentModel.y = yFactor !== null ? H * yFactor : 1098;
+}
+
 async function loadModel() {
-  const model = await PIXI.live2d.Live2DModel.from(MODEL_URL, {
+  const model = await PIXI.live2d.Live2DModel.from(_cfg.url, {
     autoInteract: false,
     autoUpdate: true,
   });
 
+  currentModel = model;
   app.stage.addChild(model);
 
-  const scale = 0.23;
-  model.scale.set(scale);
   model.anchor.set(0.5, 0.5);
-  model.x = W / 2;
-  // Previously H * 1.35 against a viewport-height canvas, which drifted
-  // off-screen on tall monitors. With H fixed at 900, pin the model
-  // ~280px below the canvas bottom so the head/shoulders sit at the
-  // same visual height as on a 14" screen.
-  model.y = 1180;
+  applyTransform(_cfg.scale, _cfg.yFactor);
 
   try {
     model.motion('Idle', 0, PIXI.live2d.MotionPriority.IDLE);
@@ -86,13 +102,13 @@ async function loadModel() {
     return Math.min(1, Math.sqrt(sum / analyserData.length) * RMS_GAIN);
   }
 
-  // Drive ParamA from live audio RMS — runs right before coreModel.update()
+  // Drive mouth from live audio RMS — runs right before coreModel.update()
   model.internalModel.on('beforeModelUpdate', () => {
     const target = getRms();
     const speed = target > currentMouth ? 0.7 : 0.4;
     currentMouth += (target - currentMouth) * speed;
     if (currentMouth < 0.01) currentMouth = 0;
-    model.internalModel.coreModel.setParameterValueById('ParamA', currentMouth);
+    model.internalModel.coreModel.setParameterValueById(_cfg.lipParam, currentMouth);
   });
 
   function ensureAudioCtx() {
@@ -139,12 +155,14 @@ async function loadModel() {
     }).catch(err => console.error('[avatar] audio decode error:', err));
   }
 
+  try { window.parent.postMessage({ type: 'avatar-ready', scale: currentScale, yFactor: currentYFactor }, '*'); } catch (e) {}
+
   // Listen for messages from parent (deck)
   window.addEventListener('message', (e) => {
     if (!e.data) return;
-    console.log('[avatar] message:', e.data.type);
     if (e.data.type === 'audio') playPayload(e.data);
     if (e.data.type === 'stop') stopAudio();
+    if (e.data.type === 'tune') applyTransform(e.data.scale, e.data.yFactor);
   });
 
   console.log('[avatar] model loaded, ready for audio payloads');

@@ -7,6 +7,7 @@ import howitworks   from './howitworks/index.js'
 import video        from './video/index.js'
 import ask          from './ask/index.js'
 import finale       from './finale/index.js'
+import lineup       from './lineup/index.js'
 import founder      from './founder/index.js'
 import vision       from './vision/index.js'
 import closing      from './closing/index.js'
@@ -15,5 +16,5 @@ import grtm         from './grtm/index.js'
 export default [
   title, grtm, evolution, tension,
   genmedia, video, stack, howitworks,
-  founder, vision, ask, finale, closing,
+  lineup, founder, vision, ask, finale, closing,
 ]
