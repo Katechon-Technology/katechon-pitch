@@ -88,6 +88,7 @@ async function loadModel() {
   let analyserData = null;
   let currentSource = null;
   let currentMouth = 0;
+  let externalRms   = 0; // driven by parent page (e.g. /pitch) when audio plays outside this iframe
   let playGen = 0; // invalidates in-flight decodeAudioData callbacks after a stop/switch
   const RMS_GAIN = 1.5; // boost factor (matches claudetorio's Math.min(1, rms * 1.5))
 
@@ -104,7 +105,8 @@ async function loadModel() {
 
   // Drive mouth from live audio RMS — runs right before coreModel.update()
   model.internalModel.on('beforeModelUpdate', () => {
-    const target = getRms();
+    const target = Math.max(getRms(), externalRms);
+    externalRms  *= 0.82; // decay so silence follows naturally
     const speed = target > currentMouth ? 0.7 : 0.4;
     currentMouth += (target - currentMouth) * speed;
     if (currentMouth < 0.01) currentMouth = 0;
@@ -163,6 +165,7 @@ async function loadModel() {
     if (e.data.type === 'audio') playPayload(e.data);
     if (e.data.type === 'stop') stopAudio();
     if (e.data.type === 'tune') applyTransform(e.data.scale, e.data.yFactor);
+    if (e.data.type === 'rms')  externalRms = e.data.value ?? 0;
   });
 
   console.log('[avatar] model loaded, ready for audio payloads');
